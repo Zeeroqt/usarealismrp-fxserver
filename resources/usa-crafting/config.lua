@@ -15,8 +15,23 @@ Config.craftingLocations = {
                 model = "gr_prop_gr_bench_02b",
                 heading = 201.0
             }
+        },
+        {
+            coords = vector3(14.64, -2694.64, 5.01), -- Docks Bench
+            object = {
+                model = "prop_tool_bench02",
+                heading = 0.0
+            }
+        },
+        {
+            coords = vector3(2332.44, 3027.11, 47.16), -- Sandy Bench
+            object = {
+                model = "prop_toolchest_05",
+                heading = 181.16
+        
+            }   
         }
-    }
+    } 
 }
 
 Config.recipes = {
@@ -433,7 +448,7 @@ Config.Keys = {
     CANCEL = {code = 23, label = 'INPUT_ENTER'}
 }
 
-Config.DEFAULT_CRAFT_DURATION_SECONDS = 10 * 60
+Config.DEFAULT_CRAFT_DURATION_SECONDS = 8 * 60
 
 Config.MAX_FAIL_CHANCE = 0.60 -- max (and initial) chance to fail when crafting
 
