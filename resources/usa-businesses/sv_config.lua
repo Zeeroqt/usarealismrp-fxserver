@@ -220,11 +220,12 @@ BUSINESSES = {
 		notRobbable = true
 	},
 	["LTD Gasoline (Banham Canyon Dr.)"] = {
-		position = {-1821.10, 795.60, 138.09},
+		position = {-1827.7962646484, 798.37969970703, 138.17199707031},
 		cameraID = 'store15',
 		isBeingRobbed = false,
 		lastRobbedTime = 0,
-		notRobbable = true
+		price = 2000,
+		notRobbable = false 
 	},
 	["247 Supermarket (Barbareno Rd.)"] = {
 		position = {-3244.92, 1000.0, 12.83},
