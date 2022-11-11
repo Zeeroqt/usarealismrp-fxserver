@@ -442,6 +442,12 @@ var itemImages = {
     "Mace": "https://i.imgur.com/EJoWdJ8.png",
     "Sheet Metal": "https://i.imgur.com/9ogIvE9.png",
     "Metal Spring": "https://i.imgur.com/2zWRSLx.png",
+    "Glass": "https://imgur.com/q7JPMF2.png",
+    "Plastic": "https://imgur.com/G45SNX2.png",
+    "Electronics": "https://imgur.com/MIKJJD0.png",
+    "Cloth": "https://imgur.com/B5pjFty.png",
+    "Electronic Kit": "https://imgur.com/gOdKCNM.png",
+    "Tape": "https://imgur.com/10oGV00.png",
     // begin ammo
     "9mm Bullets": "https://i.imgur.com/AWEjRpc.png",
     "9x18mm Bullets": "https://i.imgur.com/TFW3q4q.png",
