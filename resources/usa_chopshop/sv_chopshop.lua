@@ -3,6 +3,16 @@ math.randomseed(os.time())
 local items = {
   {name = 'Advanced Pick', type = 'illegal', price = 800, legality = 'illegal', quantity = 1, weight = 7.0},
   {name = "Iron Oxide", legality = "legal", quantity = 1, type = "misc", weight = 8, price = 950}
+  {name = "Scrap Metal", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}
+  {name = "Cloth", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}
+  {name = "Metal Spring", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}
+  {name = "Plastic", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}
+  {name = "Glass", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}
+  {name = "Copper", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}  
+  {name = "Iron", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}
+  {name = "Electronics", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}
+  {name = "Electronic Kit", legality = "legal", quantity = 5, type = "misc", weight = 2, price = 100}
+  {name = "Tape", legality = "legal", quantity = 3, type = "misc", weight = 2, price = 100}
 }
 
 RegisterServerEvent("chopshop:reward")
@@ -28,9 +38,9 @@ AddEventHandler("chopshop:reward", function(veh_name, damage, securityToken)
     local randomItem = items[math.random(#items)]
     if char.canHoldItem(randomItem) then
       char.giveItem(randomItem)
-      TriggerClientEvent("usa:notify", src, "Here, take this " .. randomItem.name .. ". It might be useful.", "^3Pedro: ^0Here, take this " .. randomItem.name .. ". It might be useful.")
+      TriggerClientEvent("ksHjsrfrk", src, "Here, take this " .. randomItem.name .. ". It might be useful.", "^3Pedro: ^0Here, take this " .. randomItem.name .. ". It might be useful.")
     else
-      TriggerClientEvent("usa:notify", src, "Inventory full!", "^3Pedro: ^0I was going to give you something extra but your pockets are full!")
+      TriggerClientEvent("ksHjsrfrk", src, "Inventory full!", "^3Pedro: ^0I was going to give you something extra but your pockets are full!")
     end
   end
 end)
