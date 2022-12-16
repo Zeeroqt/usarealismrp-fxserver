@@ -204,7 +204,7 @@ Config.recipes = {
                     hash = GetHashKey("WEAPON_HEAVYPISTOL"),
                     quantity = 1,
                     type = "weapon",
-                    weight = 18,
+                    weight = 15,
                     objectModel = "w_pi_heavypistol",
                     notStackable = true
                 }
@@ -822,6 +822,110 @@ Config.recipes = {
             type = "magazine",
             craftDurationSeconds = 1.5 * 60
         },
+        { 
+            name = "Hotwiring Kit",
+            image = "https://i.imgur.com/JZtZKoP.png",
+            requires = {
+                { name = "Fuse", quantity = 5 },
+                { name = "Plastic", quantity = 6 },
+                { name = "Electronic Kit", quantity = 4 }
+            },
+            produces = {
+                {
+                    name = "Hotwiring Kit",
+                    quantity = 1,
+                    type = "misc",
+                    weight = 5,
+                }
+            },
+            requiredCraftingLevel = 1,
+            type = "misc",
+            craftDurationSeconds = 3 * 60
+        },
+        { 
+            name = "Radio",
+            image = "https://i.imgur.com/FUreKPT.png",
+            requires = {
+                { name = "Metal Scraps", quantity = 3 },
+                { name = "Plastic", quantity = 6 },
+                { name = "Electronic Kit", quantity = 7 }
+            },
+            produces = {
+                {
+                    name = "Radio",
+                    quantity = 1,
+                    type = "misc",
+                    weight = 5,
+                }
+            },
+            requiredCraftingLevel = 1,
+            type = "misc",
+            craftDurationSeconds = 4 * 60
+        },
+        { 
+            name = "Sticky Bomb",
+            image = "https://i.imgur.com/gp0fW3J.png",
+            requires = {
+                { name = "Tape", quantity = 7 },
+                { name = "Plastic", quantity = 10 },
+                { name = "Electronic Kit", quantity = 5 },
+                { name = "Fuse", quantity = 3 },
+                { name = "Gun Powder", quantity = 5 }
+            },
+            produces = {
+                {
+                    name = "Sticky Bomb",
+                    quantity = 1,
+                    type = "misc",
+                    weight = 20,
+                }
+            },
+            requiredCraftingLevel = 3,
+            type = "misc",
+            craftDurationSeconds = 7 * 60
+        },
+        { 
+            name = "Body Armor",
+            image = "https://i.imgur.com/oHsLkWD.png",
+            requires = {
+                { name = "Tape", quantity = 3 },
+                { name = "Plastic", quantity = 10 },
+                { name = "Fabric", quantity = 8 },
+                { name = "Sheet Metal", quantity = 7 }
+            },
+            produces = {
+                {
+                    name = "Body Armor",
+                    quantity = 1,
+                    type = "misc",
+                    weight = 10,
+                }
+            },
+            requiredCraftingLevel = 1,
+            type = "misc",
+            craftDurationSeconds = 4 * 60
+        },
+        { 
+            name = "Police Armor",
+            image = "https://i.imgur.com/oHsLkWD.png",
+            requires = {
+                { name = "Sheet Metal", quantity = 12 },
+                { name = "Plastic", quantity = 12 },
+                { name = "Fabric", quantity = 10 },
+                { name = "tape", quantity = 6 }
+            },
+            produces = {
+                {
+                    name = "Police Armor",
+                    quantity = 1,
+                    type = "misc",
+                    weight = 15,
+                }
+            },
+            requiredCraftingLevel = 2,
+            type = "misc",
+            craftDurationSeconds = 4 * 60
+        },
     }
 }
 
@@ -839,9 +943,9 @@ Config.Keys = {
     CANCEL = {code = 23, label = 'INPUT_ENTER'}
 }
 
-Config.DEFAULT_CRAFT_DURATION_SECONDS = 8 * 60
+Config.DEFAULT_CRAFT_DURATION_SECONDS = 5 * 60
 
-Config.MAX_FAIL_CHANCE = 0.60 -- max (and initial) chance to fail when crafting
+Config.MAX_FAIL_CHANCE = 0.55 -- max (and initial) chance to fail when crafting
 
 Config.FAILURE_COEFFICIENT = 0.0058 -- the higher the number, the less chance of failing when crafting (should be < MAX_FAIL_CHANCE)
 

@@ -206,6 +206,10 @@ local ITEMS = {
     { name = "Bank Laptop", type = "misc", quantity = 1, legality = "legal", notStackable = true, weight = 10, objectModel = "imp_prop_impexp_tablet"},
     { name = "Blackhat USB Drive", type = "misc", quantity = 1, legality = "illegal", notStackable = true, weight = 1, objectModel = "hei_prop_hst_usb_drive"},
     { name = "Armed Truck Bomb", type = "misc", quantity = 1, legality = "illegal", notStackable = true, weight = 10, objectModel = "prop_ld_bomb"},
+    { name = "Fuse", legality = "legal", quantity = 1, type = "misc", weight = 2 },
+    { name = "Plastic", legality = "legal", quantity = 1, type = "misc", weight = 3 },
+    { name = "Electronic Kit", legality = "legal", quantity = 1, type = "misc", weight = 2 },
+    { name = "Fabric", legality = "legal", quantity = 1, type = "misc", weight = 4 },
     {
         name = "Wheelchair",
         price = 200,

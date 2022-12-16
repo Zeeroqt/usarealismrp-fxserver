@@ -308,6 +308,10 @@ var itemImages = {
     "7.62mm Shell Casing": "https://i.imgur.com/JdD8Lf8.png",
     "5.56mm Shell Casing": "https://i.imgur.com/JdD8Lf8.png",
     "9x18mm Shell Casing": "https://i.imgur.com/pza2fXR.png",
+    "Fuse": "https://imgur.com/qNOnWZg.png",
+    "Plastic": "https://imgur.com/2LLDroM.png",
+    "Electronic Kit": "https://imgur.com/VSIsUMC.png",
+    "Fabric": "https://imgur.com/HlEePti.png",
     // begin card images
     "Narlee": "https://i.imgur.com/KrPw4gk.png",
     "Red Eyes B. Dragon": "https://i.imgur.com/tKEcju1.png",
