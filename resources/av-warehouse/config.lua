@@ -7,8 +7,8 @@ Config.MinCops = 4 -- Min Cops required?
 Config.PoliceJobName = 'police' -- Your police job name
 Config.PoliceCanRaid = true -- Police can access warehouse? They won't be able to open the crates.
 Config.UseItem = true -- Use Item for Door?
-Config.DoorItem = 'Cell Phone' -- item name
-Config.removeDoorItem = false -- remove item?
+Config.DoorItem = 'Hacking Device' -- item name
+Config.removeDoorItem = true -- remove item?
 Config.SpawnGuards = true -- It will spawn guards with weapons
 Config.HackBlocks = 1 -- Number of blocks per side
 Config.HackTime = 20 -- Time before hacking minigame ends
@@ -72,6 +72,7 @@ Config.Rewards = {
 			[8] = { name = "9x18mm Bullets", type = "ammo", price = 350, weight = 0.5, quantity = 40, legality = "legal", objectModel = "prop_ld_ammo_pack_01" },
 			[9] = { name = "Firework Projectile", legality = "illegal", type = "ammo", price = 400, weight = 15, quantity = 1 },
 			[10] = { name = "Firework Projectile", legality = "illegal", type = "ammo", price = 400, weight = 15, quantity = 1 },
+			[11] = { name = "Police Armor", legality = "illegal", type = "misc", price = 600, weight = 20, quantity = 2 },
 		}
 	},
 	[2] = {
@@ -105,6 +106,7 @@ Config.Rewards = {
 			[8] = {name = 'Lockpick', type = 'misc', price = 150, legality = 'illegal', quantity = 1, weight = 5},
 			[9] = {name = 'Lockpick', type = 'misc', price = 150, legality = 'illegal', quantity = 1, weight = 5},
 			[10] = {name = 'Lockpick', type = 'misc', price = 150, legality = 'illegal', quantity = 1, weight = 5},
+			[11] = { name = "Hacking Device", type = "misc", weight = 10, quantity = 1 },
 		}
 	},
 	[4] = {
@@ -119,12 +121,13 @@ Config.Rewards = {
 			[7] = { name = "Double Barrel Shotgun Parts", price = 3200, type = "weaponParts", weight = 20.0, quantity = 1 },
 			[8] = { name = "Military Rifle Parts", price = 3200, type = "weaponParts", weight = 35.0, quantity = 1 },
 			[9] = { name = "Combat PDW Parts", price = 3200, type = "weaponParts", weight = 25.0, quantity = 1 },
+			[10] = { name = "SMG Parts", price = 4000, type = "weaponParts", weight = 35.0, quantity = 1 }, 
 		}
 	},
 	[5] = {
 		type = 'money',
 		reward = {
-			[1] = {amount = math.random(5000, 10000)}
+			[1] = {amount = math.random(7000, 13000)}
 		}
 	},
 	[6] = {
@@ -174,6 +177,7 @@ Config.Rewards = {
 			[1] = { name = "Assault Rifle MK2", type = "weapon", hash = `WEAPON_ASSAULTRIFLE_MK2`, quantity = 1, weight = 30, objectModel = "w_ar_assaultrifle" },
 			[2] = { name = "Battle Axe", type = "weapon", hash = `WEAPON_BATTLEAXE`, quantity = 1, weight = 15, objectModel = "prop_tool_fireaxe" },
 			[3] = { name = "Compact Rifle Parts", type = "weaponParts", weight = 40.0, quantity = 1 },
+			[4] = { name = "Musket", type = "weapon", hash = `WEAPON_MUSKET`, quantity = 1, weight = 30, objectModel = "w_ar_musket" },
 		}
 	},
 	[10] = {
@@ -182,6 +186,7 @@ Config.Rewards = {
 			[1] = { name = "Calvary Dagger", type = "weapon", hash = `WEAPON_DAGGER`, quantity = 1, weight = 9, objectModel = "prop_w_me_dagger" },
 			[2] = { name = "Double Barrel Shotgun", type = "weapon", hash = `WEAPON_DBSHOTGUN`, quantity = 1, weight = 25, objectModel = "w_sg_bullpupshotgun" },
 			[3] = { name = "Firework Gun", type = "weapon", hash = 2138347493, price = 5000, legality = "illegal", quantity = 1, weight = 50, objectModel = "w_lr_firework" },
+			[4] = { name = "Heavy Pistol", type = "weapon", hash = `WEAPON_HEAVYPISTOL`, quantity = 1, weight = 15, objectModel = "w_pi_heavypistol" },
 		}
 	},
 	[11] = {
@@ -192,6 +197,7 @@ Config.Rewards = {
 			[3] = { name = "Large Firework", type = "misc", price = 2000, legality = "illegal", quantity = 1, weight = 25, objectModel = "ind_prop_firework_03" },
 			[4] = { name = "Large Firework", type = "misc", price = 2000, legality = "illegal", quantity = 1, weight = 25, objectModel = "ind_prop_firework_03" },
 			[5] = { name = "Large Firework", type = "misc", price = 2000, legality = "illegal", quantity = 1, weight = 25, objectModel = "ind_prop_firework_03" },
+			[6] = { name = "Carbine Rifle", type = "weapon", hash = `WEAPON_CARBINERIFLE`, quantity = 1, weight = 40, objectModel = "w_ar_carbinerifle" },
 		}
 	},
 	[12] = {
@@ -200,6 +206,7 @@ Config.Rewards = {
 			[1] = { name = "Tommy Gun Parts", type = "weaponParts", weight = 45.0, quantity = 1 },
 			[2] = { name = "Machine Pistol Parts", type = "weaponParts", weight = 20.0, quantity = 1 },
 			[3] = { name = "Micro SMG Parts", type = "weaponParts", weight = 30.0, quantity = 1 },
+			[4] = { name = "Combat PDW", type = "weapon", hash = `WEAPON_COMBATPDW`, quantity = 1, weight = 30, objectModel = "w_sb_pdw" },
 		}
 	},
 	[13] = {
@@ -227,6 +234,7 @@ Config.Rewards = {
 			[4] = {name = "Thermite", legality = "illegal", quantity = 1, type = "misc", weight = 20},
 			[5] = {name = "Thermite", legality = "illegal", quantity = 1, type = "misc", weight = 20},
 			[6] = {name = "Thermite", legality = "illegal", quantity = 1, type = "misc", weight = 20},
+			[7] = { name = "Hacking Device", type = "misc", weight = 10, quantity = 1 },
 		}
 	},
 	[16] = {
@@ -238,6 +246,8 @@ Config.Rewards = {
 			[4] = {name = 'Hotwiring Kit', type = 'misc', legality = 'illegal', quantity = 1, weight = 10},
 			[5] = {name = 'Hotwiring Kit', type = 'misc', legality = 'illegal', quantity = 1, weight = 10},
 			[6] = {name = 'Hotwiring Kit', type = 'misc', legality = 'illegal', quantity = 1, weight = 10},
+			[7] = { name = "Police Armor", type = "misc", weight = 20, quantity = 1 },
+			[8] = { name = "Hacking Device", type = "misc", weight = 10, quantity = 1 },
 		}
 	},
 	[17] = {
@@ -256,6 +266,7 @@ Config.Rewards = {
 			[5] = { name = "Red Shoe", type = "weapon", hash = `WEAPON_THROWINGSHOERED`, quantity = 3, weight = 8 },
 			[6] = { name = "Blue Shoe", type = "weapon", hash = `WEAPON_THROWINGSHOEBLUE`, quantity = 3, weight = 8 },
 			[7] = { name = "Bank Laptop", type = "misc",  quantity = 1,  legality = "legal", notStackable = true,  weight = 10,  objectModel = "imp_prop_impexp_tablet" }
+			[8] = { name = "Police Armor", type = "misc", weight = 20, quantity = 2 },
 		}
 	},
 }
