@@ -22,18 +22,18 @@ local COORDS = {
     }
 }
 
-local SUPPLY_PICKUP_COORDS = vector3(1273.708, -1709.06, 54.77)
+local SUPPLY_PICKUP_COORDS = vector3(-1202.1, 282.8204, 69.92597)
 
 local COKE_SUPPLY_WAIT_TIME = 45000
 local COCAINE_PROCESS_WAIT_TIME = 55000
 
-local UNCUT_PRICE = 200
+local UNCUT_PRICE = 450
 
 local INPUT_KEY = 38 -- E
 
 local cocaine = {
     peds = {
-        {x = 1273.567, y = -1708.03, z = 53.77, heading = 205.0, name = 'coke_supplies_ped', model = "IG_LESTERCREST"}
+        {x = -1167.175, y = 568.715, z = 101.8275, heading = 105.55455780029, name = 'coke_supplies_ped', model = "g_m_y_salvagoon_01"}
     },
     requiredItem = "Razor Blade",
     requiredSupplies = 'Uncut Cocaine',
@@ -123,7 +123,7 @@ Citizen.CreateThread(function()
         local playerCoords = GetEntityCoords(playerPed)
         DrawText3D(1088.18, -3187.18, -38.85, 5, '[E] - Exit')
         DrawText3D(1181.63, -3113.83, 6.03, 3, '[E] - Enter')
-        DrawText3D(1273.708, -1709.06, 54.77, 5, '[E] - Buy Uncut Cocaine (~g~$' .. UNCUT_PRICE .. '.00~w~)')
+        DrawText3D(-1167.175, 568.715, 101.8275, 5, '[E] - Buy Uncut Cocaine (~g~$' .. UNCUT_PRICE .. '.00~w~)')
         for i = 1, #COORDS.PROCESSING do
             DrawText3D(COORDS.PROCESSING[i].X, COORDS.PROCESSING[i].Y, COORDS.PROCESSING[i].Z, 5, '[E] - Process Cocaine')
         end
@@ -344,11 +344,11 @@ AddEventHandler("cocaineJob:getSupplies", function(supplyType)
                 local messages = {
                     "Hurdle on friend, just wait up here...",
                     "In the market for this junk? Interesting, wait here.",
-                    "Lester, the molester. Be right back.",
+                    "Sup Esay wait a min. Be right back.",
                     "This'll kill you before your genes do, but I don't judge. Be right back.",
                     "Perfect, we're on our heads. Just wait here."
                 }
-                exports.globals:notify(messages[math.random(1, tonumber(#messages))], "^3Lester:^0 Alright, let me know if you need more. Go and cut this first at that barn in the Northern part of Grapeseed (make sure you have a Razor Blade) and then look for the red pill on your map to deliver the final product.")
+                exports.globals:notify(messages[math.random(1, tonumber(#messages))], "^3Julio:^0 Alright, let me know if you need more. Go and cut this first at that barn in the Northern part of Grapeseed (make sure you have a Razor Blade) and then look for the red pill on your map to deliver the final product.")
                 while securityToken == nil do
                     Wait(1)
                 end

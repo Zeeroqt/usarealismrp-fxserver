@@ -27,7 +27,7 @@ local peds = {}
 local BUY_RED_PHOS_COORDS = {x = 1387.02, y = 4281.44, z = 36.21}
 local BUY_PSEUDOPHEDRINE_COORDS = {x = 704.62, y = 4185.3, z = 40.70}
 local PACKAGE_COORDS = {x = 2434.78, y = 4964.29, z = 42.34}
-local COOK_COORDS = {x = 738.85601806641, y = -773.63940429688, z = 25.093187332153}
+local COOK_COORDS = {x = 1394.624, y = 3601.773, z = 38.94193}
 
 -- JOB HANDLING
 Citizen.CreateThread(function()
