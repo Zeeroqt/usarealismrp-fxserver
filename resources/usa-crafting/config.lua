@@ -876,7 +876,7 @@ Config.recipes = {
                 {
                     name = "Sticky Bomb",
                     quantity = 1,
-                    type = "misc",
+                    type = "weapon",
                     weight = 20,
                 }
             },
