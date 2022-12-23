@@ -943,7 +943,7 @@ Config.Keys = {
     CANCEL = {code = 23, label = 'INPUT_ENTER'}
 }
 
-Config.DEFAULT_CRAFT_DURATION_SECONDS = 5 * 60
+Config.DEFAULT_CRAFT_DURATION_SECONDS = 8 * 60
 
 Config.MAX_FAIL_CHANCE = 0.60 -- max (and initial) chance to fail when crafting
 
