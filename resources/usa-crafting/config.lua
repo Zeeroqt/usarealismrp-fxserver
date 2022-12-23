@@ -911,7 +911,7 @@ Config.recipes = {
             requires = {
                 { name = "Sheet Metal", quantity = 12 },
                 { name = "Plastic", quantity = 12 },
-                { name = "Fabric", quantity = 10 },
+                { name = "Kevlar", quantity = 10 },
                 { name = "tape", quantity = 6 }
             },
             produces = {
