@@ -945,7 +945,7 @@ Config.Keys = {
 
 Config.DEFAULT_CRAFT_DURATION_SECONDS = 5 * 60
 
-Config.MAX_FAIL_CHANCE = 0.55 -- max (and initial) chance to fail when crafting
+Config.MAX_FAIL_CHANCE = 0.60 -- max (and initial) chance to fail when crafting
 
 Config.FAILURE_COEFFICIENT = 0.0058 -- the higher the number, the less chance of failing when crafting (should be < MAX_FAIL_CHANCE)
 
