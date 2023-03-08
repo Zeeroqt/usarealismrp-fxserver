@@ -1,4 +1,5 @@
 local ITEMS = {
+    { name = "Micro SMG", type = "weapon", hash = GetHashKey("WEAPON_MICROSMG"), weight = 25.0, quantity = 1 },
     { name = "Akorus", type = "weapon", hash = GetHashKey("WEAPON_AKORUS"), weight = 25.0, quantity = 1 },
     { name = "Revolver Ultra", type = "weapon", hash = GetHashKey("WEAPON_REVOLVERULTRA"), weight = 25.0, quantity = 1 },
     { name = "Christmas Present", type = "misc", price = 10000, legality = "legal", quantity = 1, weight = 15, objectModel = "hei_prop_heist_box" },
@@ -19,7 +20,7 @@ local ITEMS = {
     { name = "Mace", type = "weapon", hash = GetHashKey("WEAPON_MAZE"), price = 5000, legality = "legal", quantity = 1, weight = 15, objectModel = "prop_byard_pipe_01" },
     { name = "Firework Projectile", legality = "legal", type = "ammo", price = 400, weight = 15, quantity = 1 },
     { name = "Vape", price = 400, type = "misc", quantity = 1, legality = "legal", weight = 3, objectModel = "ba_prop_battle_vape_01", blockedInPrison = true},
-    { name = "Speaker", price = 5000, legality = "legal", quantity = 1, type = "misc", weight = 20, objectModel = "sm_prop_smug_speaker" },
+    { name = "Speaker", price = 5000, legality = "legal", quantity = 1, type = "misc", weight = 20, objectModel = "sm_prop_smug_speaker", doNotAutoRemove = true },
     { name = "Katana", hash = GetHashKey("WEAPON_KATANAS"), type = "weapon", legality = "legal", price = 3000, weight = 10, quantity = 1, objectModel = "w_me_katana_lr"},
     { name = "Ninja Star", type = "weapon", hash = GetHashKey("WEAPON_NINJASTAR"), weight = 5.0, quantity = 1 },
 	{ name = "Ninja Star 2", type = "weapon", hash = GetHashKey("WEAPON_NINJASTAR2"), weight = 5.0, quantity = 1 },
@@ -289,6 +290,13 @@ local ITEMS = {
 	},
     { name = "Stage 1 Intake", price = 5000, type = "mechanicPart", quantity = 1, weight = 10},
     { name = "Stage 2 Intake", price = 5000, type = "mechanicPart", quantity = 1, weight = 10},
+    { name = "Battering Ram", type = "misc", price = 250, weight = 25, quantity = 1 },
+    {name = "Repair Kit",
+    price = 2000,
+    quantity = 1,
+    weight = 10,
+    type = "misc",
+    notStackable = true}
 }
 
 

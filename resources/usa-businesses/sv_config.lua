@@ -424,7 +424,7 @@ BUSINESSES = {
 		notRobbable = true
 	},
 	["The Cookie Jar"] = {
-		position = {-195.55, -1319.27, 30.3},
+		position = {-196.38, -1314.95, 30.80},
 		cameraID = 'store59',
 		isBeingRobbed = false,
 		lastRobbedTime = 0,
