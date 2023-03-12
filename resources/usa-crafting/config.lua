@@ -910,7 +910,7 @@ Config.recipes = {
                     quantity = 1,
                     type = "weapon",
                     weight = 28,
-                    objectModel = "w_ar_carbinerifle",
+                    objectModel = "w_sb_smg",
                     notStackable = true
                 }
             },
