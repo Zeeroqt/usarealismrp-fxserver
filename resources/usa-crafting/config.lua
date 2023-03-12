@@ -905,11 +905,11 @@ Config.recipes = {
             },
             produces = {
                 {
-                    name = "Akorus",
-                    hash = GetHashKey("WEAPON_AKORUS"),
+                    name = "FN SCAR SC",
+                    hash = GetHashKey("WEAPON_SCARSC"),
                     quantity = 1,
                     type = "weapon",
-                    weight = 25,
+                    weight = 28,
                     objectModel = "w_ar_carbinerifle",
                     notStackable = true
                 }
