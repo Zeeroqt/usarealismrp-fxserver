@@ -1631,7 +1631,7 @@ end
 
 function ownsProperty(name, src)
   local char = exports["usa-characters"]:GetCharacter(src)
-  local owned = GetOwnedProperties(char.get("_id"))
+  local owned = GetOwnedProperties(char.get("_id"), true)
   for i = 1, #owned do
     if owned[i].name == name then
       return true
