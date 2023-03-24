@@ -3,6 +3,13 @@ function onInteract(targetData,itemData)
     print(itemData.name,itemData.label)     --> lock_door           Lock Door
 end
 
+function onATMInteract(targetData, itemData)
+    if itemData.name == "use" then
+        local coords = GetEntityCoords(exports.banking:GetClosestATM())
+        TriggerServerEvent("bank:getBalanceForGUI", coords)
+    end
+end
+
 function onVehicleOptionSelect(a, buttonInfo, hitHandle)
     -- enable ui and go to correction page
     local vehPlate = GetVehicleNumberPlateText(hitHandle)
@@ -408,8 +415,22 @@ function addMechanicVehicleOptions()
     })
 end
 
+function addCivModelOptions()
+    local atmModels = {
+        -1126237515,
+        -870868698
+    }
+    local targetIds = target.addModels('ATMs', 'ATM', 'fas fa-usd-circle', atmModels, 1.0, onATMInteract, {
+        {
+          name = 'use',
+          label = 'Use'
+        }
+      })
+end
+
 addCivPlayerOptions()
 addCivVehicleOptions()
+addCivModelOptions()
 
 RegisterNetEvent("thirdEye:updateActionsForNewJob")
 AddEventHandler("thirdEye:updateActionsForNewJob", function(job)
