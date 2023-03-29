@@ -1046,6 +1046,15 @@ function interactionMenuUse(index, itemName, wholeItem)
 		TriggerEvent('injuries:bandageMyInjuries')
 		busy = false
 	end
+elseif string.find(itemName, "Oxy") then
+	if not busy then
+		busy = true
+		TriggerServerEvent("usa:removeItem", wholeItem, 1)
+		playHealingAnimation(PlayerPedId())
+		TriggerEvent("usa:heal", 75)
+		TriggerEvent('injuries:bandageMyInjuries')
+		busy = false
+	end
 	elseif string.find(itemName, "Medical Bag") then
 	if not busy then
 		busy = true

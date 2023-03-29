@@ -243,6 +243,9 @@ local locations = {
     },
     nightclub = {
         {x = -1572.2, y = -3013.3, z = -74.4, animDict = "", animName = "" , model = 793439294, heading = -60.0},
+    },
+    Oxy = {
+        {x = -235.9515838623, y = 311.29495239258, z = 92.28311920166, animDict = "", animName = "" , model = -636391810, heading = 273.21694946289}
     }
 }
 Citizen.CreateThread(function()

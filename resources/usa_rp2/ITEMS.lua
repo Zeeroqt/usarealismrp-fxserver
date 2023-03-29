@@ -239,6 +239,7 @@ local ITEMS = {
     { name = "Empty M4GoldBeast Mag", quantity = 1, type = "magazine", price = 800, weight = 7, receives = "7.62mm", MAX_CAPACITY = 30, currentCapacity = 0, legality = "illegal", notStackable = true, magComponent = "COMPONENT_M4GOLDBEAST_CLIP_01", compatibleWeapon = GetHashKey("WEAPON_M4GOLDBEAST") },
     { name = "Empty M4GoldBeast Extended Mag", quantity = 1, type = "magazine", price = 950, weight = 7, receives = "7.62mm", MAX_CAPACITY = 60, currentCapacity = 0, legality = "illegal", notStackable = true, magComponent = "COMPONENT_M4GOLDBEAST_CLIP_02", compatibleWeapon = GetHashKey("WEAPON_M4GOLDBEAST") },
     { name = "Empty M4GoldBeast Drum Mag", quantity = 1, type = "magazine", price = 1300, weight = 7, receives = "7.62mm", MAX_CAPACITY = 120, currentCapacity = 0, legality = "illegal", notStackable = true, magComponent = "COMPONENT_M4GOLDBEAST_CLIP_03", compatibleWeapon = GetHashKey("WEAPON_M4GOLDBEAST") },
+    { name = "Oxy", legality = "illegal", quantity = 1, type = "misc", weight = 2 objectModel = "prop_cs_pills"},
     {
         name = "Wheelchair",
         price = 200,
