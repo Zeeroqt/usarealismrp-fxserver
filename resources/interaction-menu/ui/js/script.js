@@ -1290,6 +1290,13 @@ $(function() {
             interactionMenu.secondaryInventory.type = "person";
             interactionMenu.showSecondaryInventory = true;
             interactionMenu.secondaryInventory.searchedPersonSource = event.data.searchedPersonSource;
+        } else if (event.data.type == "showNearbyDroppedItems") {
+            $.post('http://interaction-menu/loadInventory', JSON.stringify({}));
+            interactionMenu.currentPage = "Inventory";
+            interactionMenu.locked = false;
+            interactionMenu.secondaryInventory = event.data.inv;
+            interactionMenu.secondaryInventory.type = "nearbyItems";
+            interactionMenu.showSecondaryInventory = true;
         } else if (event.data.type == "showPropertyInventory") {
             $.post('http://interaction-menu/loadInventory', JSON.stringify({}));
             interactionMenu.currentPage = "Inventory";
