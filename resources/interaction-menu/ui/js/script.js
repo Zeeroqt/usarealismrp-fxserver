@@ -319,6 +319,7 @@ var itemImages = {
     "Crude Oil": "https://i.imgur.com/e4AsFbA.png",
     "Plastic": "https://imgur.com/2LLDroM.png",
     "Copper Wire": "https://i.imgur.com/aVnjUSE.png",
+    "Green Laptop": "https://i.imgur.com/88aArCY.png"
     // begin card images
     "Narlee": "https://i.imgur.com/KrPw4gk.png",
     "Red Eyes B. Dragon": "https://i.imgur.com/tKEcju1.png",
