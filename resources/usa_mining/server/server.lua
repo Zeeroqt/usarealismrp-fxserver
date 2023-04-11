@@ -68,7 +68,7 @@ AddEventHandler('mining:sellMinedItems', function()
     end
     if char.hasItem("Portal") then
         TriggerClientEvent("usa:notify", source, "Wow!! A Portal !!, How did u get this?", "Buyer: Wow!! A Portal !!, How did u get this?")
-        local PortalReward = math.random(60000, 120000)
+        local PortalReward = math.random(25000, 57000)
         TriggerClientEvent("usa:notify", source, "Reward: $" .. exports.globals:comma_value(PortalReward))
         char.giveMoney(PortalReward)
         char.removeItem("Portal", 1)
