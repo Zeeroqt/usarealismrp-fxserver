@@ -465,6 +465,7 @@ local burglarySearchItems = {
 	{ name = "Red Shoe", type = "weapon", hash = GetHashKey("WEAPON_THROWINGSHOERED"), weight = 8.0, quantity = 1 },
 	{ name = "Blue Shoe", type = "weapon", hash = GetHashKey("WEAPON_THROWINGSHOEBLUE"), weight = 8.0, quantity = 1 },
 	{ name = "Crumpled Paper", type = "misc", quantity = 1, legality = "legal", notStackable = true, weight = 1, objectModel = "prop_paper_ball" },
+	{ name = "Oxy", type = "misc", quantity = 1, legality = "illegal", weight = 2.5, objectModel = "prop_weed_bottle"},
 }
 
 local tradingCards = {

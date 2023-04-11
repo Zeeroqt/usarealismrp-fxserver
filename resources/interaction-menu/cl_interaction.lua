@@ -1046,6 +1046,15 @@ function interactionMenuUse(index, itemName, wholeItem)
 		TriggerEvent('injuries:bandageMyInjuries')
 		busy = false
 	end
+elseif string.find(itemName, "Oxy") then
+	if not busy then
+		busy = true
+		TriggerServerEvent("usa:removeItem", wholeItem, 1)
+		playOxyHealingAnimation(PlayerPedId())
+		TriggerEvent("usa:heal", 70)
+		TriggerEvent('injuries:bandageMyInjuries')
+		busy = false
+	end
 	elseif string.find(itemName, "Medical Bag") then
 	if not busy then
 		busy = true
@@ -1974,6 +1983,18 @@ function playHealingAnimation(ped)
 	TaskPlayAnim(ped, "combat@damage@injured_pistol@to_writhe", "variation_b", 8.0, 1, -1, 49, 0, 0, 0, 0)
 	Wait(5000)
 	StopAnimTask(ped, "combat@damage@injured_pistol@to_writhe", "variation_b", 1.0)
+end
+
+function playOxyHealingAnimation(ped)
+	exports.globals:loadAnimDict("mp_suicide")
+	TaskPlayAnim(ped, "mp_suicide", "pill", 8.0, 8.0, 1.0, 48, -1, 0, 0, 0)
+	local count = 70
+    while count > 0 do
+        Citizen.Wait(85)
+        count = count - 2
+        SetEntityHealth(PlayerPedId(), GetEntityHealth(PlayerPedId()) + 1) 
+    end
+	StopAnimTask(ped, "mp_suicide", "pill", 1.0)
 end
 
 function isMeleeWeapon(wepHash)
