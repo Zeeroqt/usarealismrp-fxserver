@@ -1051,7 +1051,6 @@ elseif string.find(itemName, "Oxy") then
 		busy = true
 		TriggerServerEvent("usa:removeItem", wholeItem, 1)
 		playOxyHealingAnimation(PlayerPedId())
-		TriggerEvent("usa:heal", 70)
 		TriggerEvent('injuries:bandageMyInjuries')
 		busy = false
 	end
