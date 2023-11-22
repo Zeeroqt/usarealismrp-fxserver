@@ -101,14 +101,16 @@ RegisterCommand("getammo", function()
     print("max ammo for wep: " .. GetMaxAmmoInClip(me, currentWeaponHash, 1))
 end, false)
 
-RegisterNetEvent("ammo:ejectMag")
-AddEventHandler("ammo:ejectMag", function(data)
+RegisterNetEvent("ammo:ejectAmmo")
+AddEventHandler("ammo:ejectAmmo", function(data)
     if MAGS_ENBALED then
         local me = PlayerPedId()
-        TriggerServerEvent("ammo:ejectMag", data.inventoryItemIndex)
+        TriggerServerEvent("ammo:ejectAmmo", data.inventoryItemIndex)
         exports.globals:playAnimation("cover@weapon@machinegun@combat_mg_str", "low_reload_left", 2000, 48, "Unloading")
-        SetPedAmmo(me, GetSelectedPedWeapon(me), 0)
-        SetAmmoInClip(me, GetSelectedPedWeapon(me), 0)
+        if data.itemType == "weapon" then
+            SetPedAmmo(me, GetSelectedPedWeapon(me), 0)
+            SetAmmoInClip(me, GetSelectedPedWeapon(me), 0)
+        end
     else 
         exports.globals:notify("Disabled in ammo only mode")
     end
@@ -145,9 +147,11 @@ Citizen.CreateThread(function()
                 Wait(1)
             end
             if not IsPedShooting(myped) then
-                local w = GetSelectedPedWeapon(myped)
-                local b1, wa = GetAmmoInClip(myped, w)
-                TriggerServerEvent("ammo:save", wa)
+                if not exports["usa-arena"]:isPlayingArena() then
+                    local w = GetSelectedPedWeapon(myped)
+                    local b1, wa = GetAmmoInClip(myped, w)
+                    TriggerServerEvent("ammo:save", wa)
+                end
             end
         end
         Wait(1)
@@ -266,10 +270,12 @@ Citizen.CreateThread(function()
             if GetGameTimer() - lastPressTime >= RELOAD_TIME_MS then
                 lastPressTime = GetGameTimer()
                 if IsPedArmed(PlayerPedId(), 4 | 2) and not NO_WEAPON_RELOADS[GetSelectedPedWeapon(PlayerPedId())] then
-                    if MAGS_ENBALED then
-                        TriggerServerEvent("ammo:checkForMagazine")
-                    else
-                        TriggerServerEvent("ammo:checkForAmmo")
+                    if not exports["usa-arena"]:isPlayingArena() then
+                        if MAGS_ENBALED then
+                            TriggerServerEvent("ammo:checkForMagazine")
+                        else
+                            TriggerServerEvent("ammo:checkForAmmo")
+                        end
                     end
                 end
             end

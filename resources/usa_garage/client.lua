@@ -21,12 +21,14 @@ locations = {
 	{ ["x"] = -357.1, ["y"] = 6094.2, ["z"] = 31.4, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections", "doctor"} }, -- paleto FD
 	{ ['x'] = 1877.0660400391, ['y'] = 3707.8864746094, ['z'] = 33.546321868896, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections", "doctor"} }, -- sandy PD
 	{ ["x"] = 1712.8, ["y"] = 3599.5, ["z"] = 35.3, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections", "doctor"} }, -- sandy FD
-	{ ['x'] = 445.236328125, ['y'] = -991.69458007813, ['z'] = 25.699808120728, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections"} }, -- MRPD
+	-- { ['x'] = 445.236328125, ['y'] = -991.69458007813, ['z'] = 25.699808120728, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections"} }, -- MRPD GABZ MLO
+	{ ['x'] = 451.11856079102, ['y'] = -1024.4779052734, ['z'] = 28.549314498901, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections"} }, -- MRPD
+	{ x = -270.45816040039, y = 6329.8051757813, z = 32.421268463135, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections"} }, -- Paleto Medical
 	{ ['x'] = 326.3464, ['y'] = -588.4531, ['z'] = 28.7968, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections", "doctor"} }, -- pillbox medical
 	{ ['x'] = -842.25219726562, ['y'] = -1233.0513916016, ['z'] = 6.9339327812195, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections", "doctor"} }, -- viceroy medical
 	{ ["x"] = 326.4, ["y"] = -1475.6, ["z"] = 29.8, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections", "doctor"} }, -- one of the hospitals in LS, forgot exaclty the name
 	{ ["x"] = 1834.5, ["y"] = 2542.2, ["z"] = 45.9, ["jobs"] = {"sheriff", "ems", "police", "judge", "corrections", "da"} },
-	{ ['x'] = 911.6, ['y'] = -163.6, ['z'] = 74.4, ["jobs"] = {"taxi"}},
+	{ ['x'] = 911.6, ['y'] = -163.6, ['z'] = 74.4, ["jobs"] = {"uber"}},
 	{ ['x'] = -77.19, ['y'] = -808.706, ['z'] = 36.48, ['jobs'] = {"da"}},
 	{ ['x'] = -311.8, ['y'] = 228.2, ['z'] = 87.8, ['noBlip'] = true}, -- studio los santos
 	{ ['x'] = -620.3, ['y'] = 52.7, ['z'] = 43.7, ['noBlip'] = true}, -- Tinsel Towers Apartments
@@ -86,11 +88,13 @@ locations = {
 	{x = -1916.8400878906, y = 2030.8366699219, z = 140.73731994629, noBlip = false}, -- Orange Farm
 	{x = 436.27728271484, y = 6529.9682617188, z = 27.877355575562, noBlip = false}, -- Orange Farm Paleto
 	{x = -181.43, y = -1289.32, z = 31.3, noBlip = true}, -- Benny's
-	{x = -372.1146, y = -109.6916, z = 38.70002, noBlip = true} -- AASC
+	{x = 1313.3503417969, y = -1662.0200195313, z = 51.236389160156, noBlip = true}, -- Eastside Deli
+	{x = 3542.7263183594, y = 3782.8959960938, z = 29.955053329468, ['noBlip'] = false}, -- Humane Labs
+	{x = -205.56878662109, y = 308.45645141602, z = 96.946670532227, ['noBlip'] = false}, -- West Vinewood Garage
+	{x = -1264.9229736328, y = -3354.0949707031, z = 13.945055007935, noBlip = true}
 }
 
 local VEHICLE_DAMAGES = {}
-closest_shop = nil
 
 Citizen.CreateThread(function()
     for _, info in pairs(locations) do
@@ -139,8 +143,7 @@ Citizen.CreateThread(function()
 					numberPlateText = exports.globals:trim(numberPlateText)
 					TriggerServerEvent("garage:storeVehicle", handle, numberPlateText, info["jobs"], info)
 				else
-					closest_shop = info
-					TriggerServerEvent("garage:openMenu", info["jobs"])
+					TriggerEvent("garage:openMenu", info["jobs"])
 				end
 			end
 		end
@@ -339,4 +342,18 @@ function hasChangedUnderglowColor(plate, currentRgb)
 	else
 		return false
 	end
+end
+
+function getNearestGarageCoords()
+	local mycoords = GetEntityCoords(PlayerPedId())
+	local closest = 1
+	local lastClosestDist = 9999999
+	for i = 1, #locations do
+		local dist = #(mycoords - vector3(locations[i].x, locations[i].y, locations[i].z))
+		if dist < lastClosestDist then
+			closest = i
+			lastClosestDist = dist
+		end
+	end
+	return locations[closest]
 end

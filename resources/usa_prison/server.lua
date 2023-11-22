@@ -3,6 +3,7 @@ local DB_NAME = "correctionaldepartment"
 exports.globals:PerformDBCheck("usa_prison", DB_NAME)
 
 local WEAPONS = {
+	{ name = "IFAK", price = 25, weight = 1, type = "misc"},
 	{ hash = "WEAPON_NIGHTSTICK", type = "weapon", name = "Nightstick", rank = 1, weight = 4, price = 50},
     { hash = "WEAPON_FLASHLIGHT", type = "weapon", name = "Flashlight", rank = 1, weight = 4, price = 50},
     { hash = GetHashKey("WEAPON_STUNGUN"), type = "weapon", name = "Stun Gun", rank = 1, weight = 5, price = 200},
@@ -31,7 +32,7 @@ local WEAPONS = {
 	{ name = "12 Gauge Shells", type = "ammo", price = 50, weight = 0.5, quantity = 10 },
 	{ name = "Taser Cartridge", type = "ammo", price = 50, weight = 0.25, quantity = 1 },
     { name = "Beanbag Shell", type = "ammo", price = 50, weight = 0.5, quantity = 8, objectModel = "prop_ld_ammo_pack_02" },
-    { name = "Flashbang", type = "weapon", hash = GetHashKey("WEAPON_FLASHBANG"), price = 150, weight = 2, rank = 5 },
+    --{ name = "Flashbang", type = "weapon", hash = GetHashKey("WEAPON_FLASHBANG"), price = 150, weight = 2, rank = 5 },
 	{ name = "Tint Meter", price = 50, weight = 2 },
 }
 

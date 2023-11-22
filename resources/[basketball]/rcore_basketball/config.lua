@@ -172,6 +172,17 @@ HoopOffsets = {
 
 BasketballHoops = {
 	{
+		pos = vector3(-2591.771484, 1722.629028, 140.487748), 
+		rot = vector4(0.000000, 0.000000, -0.552076, 0.833794),
+		State = nil,
+		Model = `prop_basketball_net`,
+		IsSubscribed = false,
+		threePointFwdDist = 0.0,
+		threePointSideDist = 0.0,
+		threePointRadius = 30.0,
+		hideBlip = true,
+	},
+	{
 		pos = vector3(63.5991, 41.85581, 72.42996), 
 		rot = vector4(0, 0, -0.9844655, -0.1755779),
 		State = nil,
@@ -439,28 +450,6 @@ BasketballHoops = {
 		threePointFwdDist = 0.0,
 		threePointSideDist = 0.0,
 		threePointRadius = 30.35,
-		hideBlip = true,
-	},
-	{
-		pos = vector3(1731.777710, 2526.281982, 42.580090),
-		rot = vector4(-0.000000, 0.000000, 0.975815, -0.218597),
-		State = nil,
-		Model = `prop_basketball_net`,
-		IsSubscribed = false,
-		threePointFwdDist = 0.0,
-		threePointSideDist = 0.0,
-		threePointRadius = 30.0,
-		hideBlip = true,
-	},
-	{
-		pos = vector3(1719.641479, 2549.761719, 42.577492),
-		rot = vector4(0.000000, 0.000000, 0.222054, 0.975034),
-		State = nil,
-		Model = `prop_basketball_net`,
-		IsSubscribed = false,
-		threePointFwdDist = 0.0,
-		threePointSideDist = 0.0,
-		threePointRadius = 30.0,
 		hideBlip = true,
 	},
 	{

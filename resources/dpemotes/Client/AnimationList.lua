@@ -543,7 +543,117 @@ DP.Dances = {
    ["thriller"] = {"mj_thriller", "mj_thriller_dance", "MJ Thriller", AnimationOptions = 
    {
        EmoteLoop = true
-   }}
+   }},
+--    ["dancepride"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride A", AnimationOptions = {
+--         Prop = 'lilprideflag1', --- Rainbow
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag1',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+--     ["danceprideb"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride B", AnimationOptions = {
+--         Prop = 'lilprideflag2', --- LGBTQIA
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag2',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+--     ["dancepridec"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride C", AnimationOptions = {
+--         Prop = 'lilprideflag3', --- Bisexual
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag3',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+--     ["danceprided"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride C", AnimationOptions = {
+--         Prop = 'lilprideflag4', --- Lesbian
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag4',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+--     ["dancepridee"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride D", AnimationOptions = {
+--         Prop = 'lilprideflag5', --- Pansexual
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag5',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+--     ["dancepridef"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride E", AnimationOptions = {
+--         Prop = 'lilprideflag6', --- Transexual
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag6',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+--     ["danceprideg"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride F", AnimationOptions = {
+--         Prop = 'lilprideflag7', --- Lesbian
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag7',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+--     ["danceprideh"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride G", AnimationOptions = {
+--         Prop = 'lilprideflag8', --- Asexual
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag8',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+--     ["dancepridei"] = { "anim@amb@nightclub@lazlow@hi_railing@", "ambclub_09_mi_hi_bellydancer_laz", "Dance Pride H", AnimationOptions = {
+--         Prop = 'lilprideflag9', --- Straight Ally
+--         PropBone = 18905,
+--         PropPlacement = { 0.0900, 0.0000, 0.0300, -39.911, 93.9166, -5.8062 },
+--         SecondProp = 'lilprideflag9',
+--         SecondPropBone = 57005,
+--         SecondPropPlacement = { 0.0900, -0.0200, -0.0300, -90.2454, 5.7068, -28.7797 },
+--         EmoteLoop = true,
+--         EmoteMoving = false,
+--     }},
+    ["gangnamstyle"] = {"custom@gangnamstyle", "gangnamstyle", "Gangnam Style", AnimationOptions =
+    {
+        EmoteMoving = false,
+        EmoteLoop = true
+    }},
+    ["makarena"] = {"custom@makarena", "makarena", "Makarena", AnimationOptions =
+    {
+        EmoteMoving = false,
+        EmoteLoop = true
+    }},
+    ["maraschino"] = {"custom@maraschino", "maraschino", "Maraschino", AnimationOptions =
+    {
+        EmoteMoving = false,
+        EmoteLoop = true
+    }},
+    ["salsadance"] = {"custom@salsa", "salsa", "Salsa", AnimationOptions =
+    {
+        EmoteMoving = false,
+        EmoteLoop = true
+    }},
 }
 
 DP.Emotes = {
@@ -2152,6 +2262,35 @@ DP.Emotes = {
    {
        EmoteLoop = true,
        EmoteMoving = false,
+   }},
+   ["jump3"] = {"syx@jump03", "jump03", "Jump 3", AnimationOptions =
+   {
+       EmoteMoving = false,
+   }},
+   ["jump4"] = {"syx@jump04", "jump04", "Jump 4", AnimationOptions =
+   {
+       EmoteMoving = false,
+   }},
+   ["jump5"] = {"syx@jump05", "jump05", "Jump 5", AnimationOptions =
+   {
+       EmoteMoving = false,
+   }},
+   ["jump6"] = {"syx@jump06", "jump06", "Jump 6", AnimationOptions =
+   {
+       EmoteMoving = false,
+   }},
+   ["jump7"] = {"syx@jump07", "jump07", "Jump 7", AnimationOptions =
+   {
+       EmoteMoving = false,
+   }},
+   ["jump8"] = {"syx@jump08", "jump08", "Jump 8", AnimationOptions =
+   {
+       EmoteMoving = false,
+   }},
+   ["pockets"] = {"hoodie_hands@dad", "hoodie_hands_clip", "Hands in pockets (Hoodie)", AnimationOptions =
+   {
+       EmoteLoop = true,
+       EmoteMoving = true
    }},
 }
 
@@ -3921,5 +4060,119 @@ DP.PropEmotes = {
         PropBone = 28422,
         PropPlacement = {0.0, -0.0100, -0.0100, 0.0, 0.0, 100.0000},
         EmoteLoop = true
+    }},
+    ["basket"] = {"missfbi4prepp1", "idle", "Basket", AnimationOptions =
+    {
+        Prop = 'bzzz_prop_shop_basket_a',
+        PropBone = 57005,
+        PropPlacement = {0.34, -0.25, -0.24, -146.0, 115.0, 19.0},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["basket2"] = {"missfbi4prepp1", "idle", "Basket 2", AnimationOptions = 
+    {
+        Prop = 'bzzz_prop_shop_basket_b',
+        PropBone = 57005,
+        PropPlacement = {0.34, -0.25, -0.24, -146.0, 115.0, 19.0},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["power"] = {"move_weapon@jerrycan@generic", "idle", "Power House", AnimationOptions = 
+    {
+        Prop = 'prop_bzzz_elektro_powerhouse001',
+        PropBone = 57005,
+        PropPlacement = {0.11, 0.06, 0.0, 98.0, 12.0, -99.0},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["wlight"] = {"missfbi4prepp1", "idle", "Weed Light", AnimationOptions = 
+    {
+        Prop = 'prop_bzzz_drugs_light001',
+        PropBone = 57005,
+        PropPlacement = {0.08, 0.18, -0.02, -130.0, 0.0, -90.0},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["poolcue"] = {"pool_pack_1@dark", "pool_pack_1_clip", "Play Pool", AnimationOptions =
+    {
+        Prop = 'prop_pool_cue',
+        PropBone = 57005,
+        PropPlacement = {0.0900, 0.2000, 0.0800, -61.4338, -7.2194, 3.1642},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["poolcue2"] = {"pool_pack_2@dark", "pool_pack_2_clip", "Play Pool 2 (Pose)", AnimationOptions =
+    {
+        Prop = 'prop_pool_cue',
+        PropBone = 57005,
+        PropPlacement = {0.1200, -0.5200, -0.1200, -78.0400, -1.4526, 1.8479},
+        EmoteLoop = true,
+        EmoteMoving = false
+    }},
+    ["poolcue3"] = {"pool_pack_3@dark", "pool_pack_3_clip", "Play Pool 3 (Pose)", AnimationOptions =
+    {
+        Prop = 'prop_pool_cue',
+        PropBone = 57005,
+        PropPlacement = {0.1200, -0.3500, -0.0200, -90.0000, 0.0, 0.0},
+        EmoteLoop = true,
+        EmoteMoving = false
+    }},
+    ["poolcue4"] = {"pool_pack_4@dark", "pool_pack_4_clip", "Play Pool 4 (Pose)", AnimationOptions =
+    {
+        Prop = 'prop_pool_cue',
+        PropBone = 61163,
+        PropPlacement = { 0.2600, -0.1600, -0.3100, -31.8144, 14.4214, -13.2854},
+        EmoteLoop = true,
+        EmoteMoving = false
+    }},
+    ["poolcue5"] = {"pool_pack_5@dark", "pool_pack_5_clip", "Play Pool 5", AnimationOptions =
+    {
+        Prop = 'prop_pool_cue',
+        PropBone = 57005,
+        PropPlacement = {0.0700, 0.5500, 0.1000, -76.6157, -9.5838, 2.9748},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["bookb"] = {"holding_book_1@dark", "holding_book_1_clip", "Book 2", AnimationOptions =
+    {
+        Prop = 'prop_cs_book_01',
+        PropBone = 57005,
+        PropPlacement = {0.0900, 0.0900, -0.0400, 80.1585, 158.5623, 24.7080},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["bookc"] = {"holding_book_2@dark", "holding_book_2_clip", "Book 3", AnimationOptions =
+    {
+        Prop = "prop_michael_backpack",
+        PropBone = 40269,
+        PropPlacement = {0.0300, -0.1600, -0.0900, -170.7740, 112.8415, -20.0836},
+        SecondProp = 'prop_cs_book_01',
+        SecondPropBone = 18905,
+        SecondPropPlacement = {0.0400, 0.0400, 0.0300, -69.0815, 176.3905, 19.3724},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["bookd"] = {"holding_book_3@dark", "holding_book_3_clip", "Book 4", AnimationOptions =
+    {
+        Prop = 'prop_cs_stock_book',
+        PropBone = 18905,
+        PropPlacement = {0.0700, 0.0400, 0.0700, 0.0000, 0.0000, -15.0000},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["booke"] = {"holding_book_4@dark", "holding_book_4_clip", "Book 5", AnimationOptions =
+    {
+        Prop = 'prop_cs_stock_book',
+        PropBone = 57005,
+        PropPlacement = {0.0100, 0.0100, -0.0600, 15.1511, 3.1232, -21.2448},
+        EmoteLoop = true,
+        EmoteMoving = true
+    }},
+    ["bookf"] = {"holding_book_5@dark", "holding_book_5_clip", "Book 6", AnimationOptions =
+    {
+        Prop = 'v_ilev_mp_bedsidebook',
+        PropBone = 18905,
+        PropPlacement = {0.2100, 0.0600, 0.0400, 170.6161, -14.2960, 28.8727},
+        EmoteLoop = true,
     }},
 }

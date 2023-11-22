@@ -144,11 +144,15 @@ AddEventHandler('veh:toggleEngine', function(_hasKey, _engineOn)
         end
       end
       if not isHotwiring then
+        local sentAlert = false
         local beginTime = GetGameTimer()
         while GetGameTimer() - beginTime < 3000 do
           Citizen.Wait(0)
           ShowHelp('You do not have the keys to this vehicle!', 0)
-          exports.globals:notify('You do not have the keys to this vehicle!')
+          if not sentAlert then 
+            sentAlert = true
+            exports.globals:notify('You do not have the keys to this vehicle!')
+          end
         end
       end
     end
@@ -189,7 +193,7 @@ AddEventHandler('veh:hotwireVehicle', function()
         if not IsEntityPlayingAnim(playerPed, 'veh@handler@base', 'hotwire', 3) then
           TaskPlayAnim(playerPed, 'veh@handler@base', 'hotwire', 8.0, 1.0, -1, 49, 1.0, false, false, false)
         end
-        local success = lib.skillCheck({'easy', 'easy', 'medium', 'medium', 'hard'}, {'w', 'a', 's', 'd'})
+        local success = lib.skillCheck({'easy', 'easy', 'medium', 'medium', 'hard'})
         if success then
           TriggerEvent('usa:notify', 'The hotwiring kit was ~g~successful~s~!')
           isHotwiring = false

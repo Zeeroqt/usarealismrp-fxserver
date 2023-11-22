@@ -38,7 +38,6 @@ local GENERAL_STORE_ITEMS = {
     {name = "Peanut Butter Cups", price = 65, type = "food", substance = 13.0, quantity = 1, legality = "legal", weight = 5, objectModel = "ng_proc_food_chips01a"},
     {name = "Taco", price = 65, type = "food", substance = 10.0, quantity = 1, legality = "legal", weight = 10, objectModel = "prop_taco_01"},
     {name = "Nachos", price = 65, type = "food", substance = 12.0, quantity = 1, legality = "legal", weight = 11, objectModel = "ng_proc_food_chips01b"},
-    {name = "Walkers Milk Chocolate Toffee", price = 35, type = "food", substance = 9.0, quantity = 1, legality = "legal", weight = 5, objectModel = "ng_proc_food_chips01a"},
     {name = "Sea Salt & Vinegar Chips", price = 35, type = "food", substance = 7.0, quantity = 1, legality = "legal", weight = 7, objectModel = "ng_proc_food_chips01a"},
     {name = "Cheetos", price = 40, type = "food", substance = 6.0, quantity = 1, legality = "legal", weight = 7, objectModel = "ng_proc_food_chips01a"},
     {name = "Flaming Hot Cheetos", price = 40, type = "food", substance = 6.0, quantity = 1, legality = "legal", weight = 7, objectModel = "ng_proc_food_chips01c"},
@@ -56,7 +55,6 @@ local GENERAL_STORE_ITEMS = {
     {name = "Dr. Pepper", price = 75, type = "drink", substance = 38.0, quantity = 1, legality = "legal", weight = 5, objectModel = "ng_proc_sodacan_01b"},
     {name = "Grape Soda", price = 75, type = "drink", substance = 38.0, quantity = 1, legality = "legal", weight = 5, objectModel = "ng_proc_sodacan_01b"},
     {name = "Monster Energy Drink", price = 75, type = "drink", substance = 38.0, quantity = 1, legality = "legal", weight = 5, objectModel = "prop_energy_drink", blockedInPrison = true},
-    {name = "Four Loko (8%)", price = 90, type = "alcohol", substance = 38.0, quantity = 1, legality = "legal", weight = 10, strength = 0.04, objectModel = "prop_energy_drink", blockedInPrison = true},
     {name = "Corona Light Beer (4%)", price = 85, type = "alcohol", substance = 25.0, quantity = 4, legality = "legal", weight = 8, strength = 0.03, objectModel = "prop_beer_bottle", blockedInPrison = true},
     {name = "Jack Daniels Whiskey (40%)", price = 200, type = "alcohol", substance = 10.0, quantity = 1, legality = "legal", weight = 12, strength = 0.08, objectModel = "prop_whiskey_bottle", blockedInPrison = true},
     {name = "Champagne (12.5%)", price = 200, type = "alcohol", substance = 18.0, quantity = 1, legality = "legal", weight = 10, strength = 0.06, objectModel = "prop_whiskey_bottle", blockedInPrison = true},
@@ -141,50 +139,63 @@ function AddGeneralStoreItem(category, item)
   table.insert(GENERAL_STORE_ITEMS[category], item)
 end
 
+function getNearbyStoreType(src)
+  local pedCoords = GetEntityCoords(GetPlayerPed(src))
+  for i = 1, #Config.HARDWARE_STORE_LOCATIONS do
+    local loc = Config.HARDWARE_STORE_LOCATIONS[i]
+    local dist = #(pedCoords - vector3(loc.x, loc.y, loc.z))
+    if dist < 5 then
+      return "hardware"
+    end
+  end
+  return "general"
+end
+
+function getItemByTabAndName(storeType, tab, itemName)
+  if storeType == 'general' then
+    for i = 1, #GENERAL_STORE_ITEMS[tab] do
+      if GENERAL_STORE_ITEMS[tab][i].name == itemName then
+        return GENERAL_STORE_ITEMS[tab][i]
+      end
+    end
+  elseif storeType == 'hardware' then
+    for i = 1, #HARDWARE_STORE_ITEMS[tab] do
+      if HARDWARE_STORE_ITEMS[tab][i].name == itemName then
+        return HARDWARE_STORE_ITEMS[tab][i]
+      end
+    end
+  end
+end
+
 RegisterServerEvent('generalStore:loadShopliftAreas')
 AddEventHandler('generalStore:loadShopliftAreas', function()
   TriggerClientEvent('generalStore:loadShopliftAreas', source, ShopliftingAreas)
 end)
 
 RegisterServerEvent("generalStore:buyItem")
-AddEventHandler("generalStore:buyItem", function(item, store, inPrison, business)
+AddEventHandler("generalStore:buyItem", function(data, business)
+  local nearbyStoreType = getNearbyStoreType(source)
+  local desiredItem = getItemByTabAndName(nearbyStoreType, data.tab, data.itemName)
   local char = exports["usa-characters"]:GetCharacter(source)
-  if store == 'GENERAL' then
-    item.price = GetServerPrice(item, GENERAL_STORE_ITEMS)
-  elseif store == 'HARDWARE' then
-    item.price = GetServerPrice(item, HARDWARE_STORE_ITEMS)
-  end
-  if inPrison and item.blockedInPrison then
-    TriggerClientEvent('usa:notify', source, 'We don\'t sell that here!')
+  if desiredItem.blockedInPrison and char.get("jailTime") > 0 then
+    TriggerClientEvent("stores:sendDataToApp", source, { showNotification = true, notificationText = "We don't sell that here" })
     return
   end
-  if char.canHoldItem(item) then
-    if char.hasEnoughMoneyOrBank(item.price) then
-      if item.type and item.type == "weapon" then
-        item.uuid = exports.globals:generateID()
-      end
-      char.removeMoneyOrBank(item.price)
-      char.giveItem(exports.globals:deepCopy(item), item.quantity or 1)
-      TriggerClientEvent("usa:notify", source, "Purchased: ~y~" .. item.name)
+  if char.canHoldItem(desiredItem) then
+    if char.hasEnoughMoneyOrBank(desiredItem.price) then
+      desiredItem.uuid = exports.globals:generateID()
+      char.removeMoneyOrBank(desiredItem.price, "General Store ("..desiredItem.name..")")
+      char.giveItem(exports.globals:deepCopy(desiredItem), desiredItem.quantity or 1)
+      TriggerClientEvent("stores:sendDataToApp", source, { showNotification = true, notificationText = "Purchased: " .. desiredItem.name })
       if business then
-        exports["usa-businesses"]:GiveBusinessCashPercent(business, item.price)
+        exports["usa-businesses"]:GiveBusinessCashPercent(business, desiredItem.price)
       end
     else
-      TriggerClientEvent("usa:notify", source, "You don't have enough money!")
+      TriggerClientEvent("stores:sendDataToApp", source, { showNotification = true, notificationText = "Not enough money!" })
     end
   else
-    TriggerClientEvent("usa:notify", source, "Your inventory is full!")
+    TriggerClientEvent("stores:sendDataToApp", source, { showNotification = true, notificationText = "Inventory full!" })
   end
-end)
-
-RegisterServerEvent("generalStore:loadItems")
-AddEventHandler("generalStore:loadItems", function()
-  TriggerClientEvent("generalStore:loadItems", source, GENERAL_STORE_ITEMS)
-end)
-
-RegisterServerEvent("hardwareStore:loadItems")
-AddEventHandler("hardwareStore:loadItems", function()
-  TriggerClientEvent("hardwareStore:loadItems", source, HARDWARE_STORE_ITEMS)
 end)
 
 RegisterServerEvent('generalStore:giveStolenItem')
@@ -224,3 +235,23 @@ AddEventHandler('generalStore:attemptShoplift', function(area)
     end
   end)
 end)
+
+RegisterServerCallback {
+  eventName = "stores:fetchData",
+  eventCallback = function(src, tab)
+    local nearbyStoreType = getNearbyStoreType(src)
+    if nearbyStoreType == "general" then
+      tab = (tab or "Food")
+      return {
+        items = GENERAL_STORE_ITEMS[tab],
+        tabs = Config.TABS.GENERAL_STORE
+      }
+    elseif nearbyStoreType == "hardware" then
+      tab = (tab or "Electronics")
+      return {
+        items = HARDWARE_STORE_ITEMS[tab],
+        tabs = Config.TABS.HARDWARE_STORE
+      }
+    end
+  end
+}

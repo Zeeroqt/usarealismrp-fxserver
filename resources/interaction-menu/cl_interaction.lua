@@ -357,13 +357,17 @@ local THROWABLES = {
 	["Red Shoe"] = true
 }
 
+local hasLoadedItemImages = false
+
 RegisterNUICallback('escape', function(data, cb)
 	DisableGui()
 	if data.vehicle.plate then
 		TriggerServerEvent("vehicle:RemovePersonFromInventory", data.vehicle.plate)
 	end
-	if data.secondaryInventoryType == "person" then
+	if data.secondaryInventoryType == "person"  then
 		TriggerServerEvent("inventory:removeInventoryAccessor", data.secondaryInventorySrc)
+	elseif data.secondaryInventoryType == "nearbyItems" then
+		TriggerServerEvent("interaction:removeDroppedItemAccessor")
 	end
 	if data.currentPage == "Inventory" and data.secondaryInventoryType == "property" then
 		TriggerServerEvent("properties-og:markAsInventoryClosed")
@@ -749,7 +753,7 @@ RegisterNUICallback('reloadWeapon', function(data, cb)
 end)
 
 RegisterNUICallback('unloadWeapon', function(data, cb)
-	TriggerEvent("ammo:ejectMag", data)
+	TriggerEvent("ammo:ejectAmmo", data)
 end)
 
 RegisterNUICallback('notification', function(data, cb)
@@ -996,34 +1000,35 @@ function interactionMenuUse(index, itemName, wholeItem)
 			dict = "weapon@w_sp_jerrycan",
 			name = "fire"
 		}
-
 		exports.globals:loadAnimDict(JERRY_CAN_ANIMATION.dict)
-
 		hitHandleVehicle = getVehicleInFrontOfUser()
 		if tonumber(hitHandleVehicle) ~= 0 then
 			busy = true
 			local ped = GetPlayerPed(-1)
 			local jcan = 883325847
 			GiveWeaponToPed(ped, jcan, 20, false, true) -- easiest way to remove jerry can object off back when using it (from weapons-on-back resource)
-			Wait(1000)
-			TriggerEvent("usa:playAnimation", JERRY_CAN_ANIMATION.dict, JERRY_CAN_ANIMATION.name, -8, 1, -1, 53, 0, 0, 0, 0, 24.5)
-			local start = GetGameTimer()
-			while GetGameTimer() - start < JERRY_CAN_REFUEL_TIME do
-				if not IsEntityPlayingAnim(playerPed, JERRY_CAN_ANIMATION.dict, JERRY_CAN_ANIMATION.name, 3) then
-					TaskPlayAnim(playerPed, JERRY_CAN_ANIMATION.dict, JERRY_CAN_ANIMATION.name, 8.0, -8, -1, 31, 0, 0, 0, 0)
-				end
-				if GetSelectedPedWeapon(ped) ~= jcan then
-					GiveWeaponToPed(ped, jcan, 20, false, true)
-				end
-				DrawTimer(start, JERRY_CAN_REFUEL_TIME, 1.42, 1.475, "Refueling")
-				Wait(0)
+			if lib.progressBar({
+				duration = JERRY_CAN_REFUEL_TIME,
+				label = 'Refueling',
+				useWhileDead = false,
+				canCancel = true,
+				disable = {
+					car = true,
+					move = true,
+					combat = true,
+				},
+				anim = {
+					dict = JERRY_CAN_ANIMATION.dict,
+					clip = JERRY_CAN_ANIMATION.name,
+					flag = 39
+				},
+			}) then
+				-- refuel --
+				TriggerServerEvent("fuel:refuelWithJerryCan", exports.globals:trim(GetVehicleNumberPlateText(hitHandleVehicle)))
+				-- remove jerry can weapon from inventory --
+				TriggerServerEvent("usa:removeItem", wholeItem, 1)
+				TriggerEvent("interaction:equipWeapon", wholeItem, false)
 			end
-			ClearPedTasksImmediately(ped)
-			-- refuel --
-			TriggerServerEvent("fuel:refuelWithJerryCan", exports.globals:trim(GetVehicleNumberPlateText(hitHandleVehicle)))
-			-- remove jerry can weapon from inventory --
-			TriggerServerEvent("usa:removeItem", wholeItem, 1)
-			TriggerEvent("interaction:equipWeapon", wholeItem, false)
 			busy = false
 		else
 			TriggerEvent("usa:notify", "No vehicle found!")
@@ -1096,7 +1101,7 @@ function interactionMenuUse(index, itemName, wholeItem)
 					TaskPlayAnim(playerPed, anim.dict, anim.name, 8.0, 1.0, -1, 31, 1.0, false, false, false)
 				end
 
-				local success = lib.skillCheck({'easy', 'easy', 'medium', 'medium'}, {'i', 'j', 'k', 'l'})
+				local success = lib.skillCheck({'easy', 'easy', 'medium', 'medium'})
 				if success then
 					SetVehicleDoorsLocked(veh, 1)
 					SetVehicleDoorsLockedForAllPlayers(veh, 0)
@@ -1129,7 +1134,7 @@ function interactionMenuUse(index, itemName, wholeItem)
 		-- Cell Phone --
 		-------------------
 	elseif string.find(itemName, "Cell Phone") then
-		TriggerEvent("high_phone:openPhone")
+		exports["lb-phone"]:ToggleOpen(true, false)
 		-------------------
 		-- Food Item  --
 		-------------------
@@ -1184,7 +1189,12 @@ function interactionMenuUse(index, itemName, wholeItem)
 	elseif itemName:find("Shovel") then
 		TriggerEvent("cultivation:shovel")
 	elseif itemName:find("Thermite") then
-		TriggerServerEvent("bank:useThermite")
+		local playerCoords = GetEntityCoords(PlayerPedId())
+		if #(playerCoords - exports.usa_bankrobbery:getBankCoords()) <= 100 then
+			TriggerServerEvent("bank:useThermite")
+		elseif #(playerCoords - exports["usa-artHeist"]:getMansionCoords()) <= 100 then
+			TriggerEvent("artHeist:useThermite")
+		end
 	elseif itemName:find("Butchered Meat") then
 		TriggerServerEvent("hunting:cookMeat", wholeItem.name)
 	elseif itemName:find("Vape") then
@@ -1238,7 +1248,7 @@ function interactionMenuUse(index, itemName, wholeItem)
 		ExecuteCommand("placehoop")
 	elseif itemName == "Skateboard" then
 		TriggerEvent('usa_skateboard:PlaceDown')
-  elseif wholeItem.type == "magicPotion" then
+  	elseif wholeItem.type == "magicPotion" then
 		TriggerServerEvent("magicPotion:used", wholeItem)
 	elseif itemName == "Drill" then
 		TriggerEvent("banking:DrillATM")
@@ -1258,8 +1268,32 @@ function interactionMenuUse(index, itemName, wholeItem)
 		TriggerServerEvent("rcore_spray:spray")
 	elseif itemName == "Rag" then
 		TriggerServerEvent("rcore_spray:sprayremover")
+	elseif itemName == "Car Wash Kit" then
+		local nearestVeh = lib.getClosestVehicle(GetEntityCoords(PlayerPedId()), 3, false)
+		local success = lib.skillCheck({'easy', 'easy', 'easy', 'easy', 'easy', 'medium', 'medium', 'medium'})
+		if success then
+			TriggerEvent("dpemotes:command", 'e', GetPlayerServerId(PlayerId()), {"clean2"})
+			lib.progressBar({
+				duration = 60000,
+				label = 'Cleaning vehicle',
+				canCancel = true,
+				disable = {
+					car = true,
+					move = true,
+					combat = true,
+				},
+			})
+			NetworkRequestControlOfEntity(nearestVeh)
+			SetVehicleDirtLevel(nearestVeh, 0.0)
+			exports.globals:notify("Vehicle clean!", "^3INFO: ^0Vehicle cleaned!")
+		else
+			exports.globals:notify("Wash failed!", "^3INFO: ^Wash failed!")
+		end
+		TriggerEvent("dpemotes:command", 'e', GetPlayerServerId(PlayerId()), {"c"})
+	elseif itemName == "lift" or itemName == "lift_rail" then
+		TriggerEvent("pickle_construction:createLift")
 	else
-		TriggerEvent("interaction:notify", "There is no use action for that item!")
+		TriggerServerEvent("interaction:attemptItemUse", wholeItem)
 	end
 end
 
@@ -1499,6 +1533,9 @@ AddEventHandler("interaction:equipWeapon", function(item, equip, ammoAmount, pla
 		end
 		SetPedAmmo(ped, item.hash, currentWeaponAmmo)
 		SetAmmoInClip(ped, item.hash, currentWeaponAmmo)
+		if exports["usa-arena"]:isPlayingArena() then
+			SetPedInfiniteAmmo(PlayerPedId(), true, item.hash)
+		end
 		if playAnim then
 			exports["usa_holster"]:handleHolsterAnim()
 		end
@@ -1547,7 +1584,7 @@ function EnableGui(target_vehicle_plate, goToPage)
 			id = playerServerId
 		}
 	end
-	SendNUIMessage({
+	local nuiMessage = {
 		type = "enableui",
 		enable = true,
 		nearestPlayer = nearestPlayer,
@@ -1556,7 +1593,12 @@ function EnableGui(target_vehicle_plate, goToPage)
 		isInVehicle = IsPedInAnyVehicle(me, true),
 		isCuffed = IsPedCuffed(me),
 		goToPage = goToPage
-	})
+	}
+	if not hasLoadedItemImages then
+		hasLoadedItemImages = true
+		nuiMessage.itemImages = ITEM_IMAGES
+	end
+	SendNUIMessage(nuiMessage)
 	if target_vehicle_plate then
 		TriggerServerEvent("vehicle:AddPersonToInventory", target_vehicle_plate)
 	end

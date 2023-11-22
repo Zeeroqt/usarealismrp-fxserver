@@ -36,9 +36,17 @@ end
 --------------------------------------------------------------
 function notify(msg, chatMsg)
   if msg then
-    SetNotificationTextEntry("STRING")
-    AddTextComponentString(msg)
-    DrawNotification(0,1)
+    msg = msg:gsub("~y~", "")
+    msg = msg:gsub("~w~", "")
+    msg = msg:gsub("~g~", "")
+    msg = msg:gsub("~r~", "")
+    msg = msg:gsub("~s~", "")
+    lib.notify({
+      title = msg,
+      position = "center-left"
+      --description = 'Notification description',
+      --type = 'success'
+    })
   end
   if chatMsg then 
     TriggerEvent("chatMessage", "", {}, chatMsg)
@@ -357,4 +365,8 @@ exports("sleep", function(timeMs)
   while GetGameTimer() - start < timeMs do
     Wait(1)
   end
+end)
+
+exports("tableToVector3", function(coordTable)
+	return vector3(coordTable.x, coordTable.y, coordTable.z)
 end)

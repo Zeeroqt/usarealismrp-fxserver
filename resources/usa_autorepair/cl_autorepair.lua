@@ -29,7 +29,7 @@ vehicleRepairStation = {
 	{965.11193847656, -108.40106964111, 74.363616943359}, -- outlaw biker
 	--{830.64587402344, -819.84143066406, 26.332593917847}, -- Otto's Repair
 	{126.11426544189, -3022.9548339844, 6.0408930778503}, -- Tuner shop
-	{-1417.4580078125, -446.09741210938, 34.90970993042}, -- hayes auto
+	--{-1417.4580078125, -446.09741210938, 34.90970993042}, -- hayes auto
 	{937.69396972656, -970.66680908203, 38.543064117432}, -- autocare garage
 	{473.4534, -1882.8077, 25.4803}, -- atomic autos
 	{-214.37, -1336.91, 30.3} -- Benny's
@@ -99,6 +99,7 @@ Citizen.CreateThread(function()
 					local engineHp = GetVehicleEngineHealth(playerVeh)
 					local bodyHp = GetVehicleBodyHealth(playerVeh)
 					local canBeRepaired = engineHp < 1000.0 or bodyHp < 1000.0
+					local plate = GetVehicleNumberPlateText(playerVeh)
 					if canBeRepaired then
 						if GetIsVehicleEngineRunning(playerVeh) then
 							TriggerEvent('usa:notify', '~y~Vehicle engine must be off!')
@@ -107,7 +108,7 @@ Citizen.CreateThread(function()
 							while securityToken == nil do
 								Wait(1)
 							end
-							TriggerServerEvent('autoRepair:checkMoney', business, engineHp, bodyHp, securityToken)
+							TriggerServerEvent('autoRepair:checkMoney', plate, (business or false), engineHp, bodyHp, securityToken)
 							local begin = GetGameTimer()
 							while GetGameTimer() - begin < EVENT_TRIGGER_DELAY do
 								Wait(1)

@@ -53,7 +53,7 @@ USARRP
 		end)
 		```
 7) Create your CouchDB database views (see below view definitions). For more information about views: https://docs.couchdb.org/en/3.2.0/ddocs/views/index.html
-8) Download and install [MySQL 5.7](https://dev.mysql.com/downloads/mysql/5.7.html)
+8) Download and install [MariaDB 10.11.3](https://mariadb.org/download/?t=mariadb&p=mariadb&r=11.1.0&os=windows&cpu=x86_64&pkg=msi&m=xtom_fre)
 9) Set up a user with password (used in step 11)
 10) Create a new MySQL database the scripts will use (name of DB used in following step)
 11) Create a new file named `mysql_connection_string.cfg` in the `usarealismrp-fxserver` folder
@@ -184,9 +184,9 @@ char.set("job", "mechanic") -- player's job is now marked as mechanic
 
 char.giveMoney(5000) -- give $5,000 cash to player
 char.removeMoney(5000) -- remove $5,000 cash from player
-char.giveBank(5000) -- give $5,000 bank to player
-char.removeBank(5000) -- remove $5,000 bank from player
-char.removeMoneyOrBank(500) -- removes $500 from cash or bank (If a player doesn't have enough in cash it's taken from bank)
+char.giveBank(5000, "Reason") -- give $5,000 bank to player
+char.removeBank(5000, "Reason") -- remove $5,000 bank from player
+char.removeMoneyOrBank(500, "Reason") -- removes $500 from cash or bank (If a player doesn't have enough in cash it's taken from bank)
 
 char.set("bank", char.get("bank") + math.random(100, 500)) -- give player random amount of money from $100 to $500 directly to their bank
 ```
@@ -223,6 +223,36 @@ see resources/essentialmode/db.lua, example todo still
 ```
 
 Also check out `resources/[system]/globals` for a library of some miscellaneous commonly used functions for both the server and client side.
+
+**Registering Commands**
+
+An example of creating a new command that anyone can use:
+```
+TriggerEvent('es:addCommand', 'mynewcommand', function(source, args, char)
+	local firstArgument = args[2]
+	-- ...
+end, {
+	help = "Fancy new command description here",
+	params = {
+		{ name = "firstArgument", help = "description here" },
+		{ name = "secondArgument", help = "description here" }
+	}
+})
+```
+
+An example of creating a new command restricted by group (has to be used on server side):
+```
+TriggerEvent('es:addGroupCommand', 'mynewcommand', 'admin', function(source, args, char)
+	local firstArgument = args[2]
+	-- ...
+end, {
+	help = "Fancy new command description here",
+	params = {
+		{ name = "firstArgument", help = "description here" },
+		{ name = "secondArgument", help = "description here" }
+	}
+})
+```
 
 **Job Types**
 1. "civ"

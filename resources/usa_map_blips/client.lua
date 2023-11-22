@@ -91,7 +91,7 @@ local blips = {
 	{ title="Hospital", colour = 51, id = 61, scale = 0.7, x = -817.61511230469, y = -1236.6121826172, z = 7.3374252319336, group = "hospitals" }, -- viceroy medical
 	{ title="Hospital", colour = 51, id = 61, scale = 0.7, x = 360.5, y = -584.7, z = 28.8, group = "hospitals" }, -- pillbox medical
 	{ title="Vanilla Unicorn", colour = 50, id = 121, scale = 0.7, x=129.607, y=-1299.83, z=29.2327, group = "entertainment"},
-	{ title="Tequilala", colour = 15, id = 93, scale = 0.7, x=-564.778, y=274.195, z=83.0197, group = "entertainment"},
+	{ title="Legacy Tavern", colour = 15, id = 93, scale = 0.7, x=-564.778, y=274.195, z=83.0197, group = "entertainment"},
 	{ title="Bahama Mamas", colour = 15, id = 93, scale = 0.7, x=-1388.94, y=-585.919, z=29.2195, group = "entertainment" },
 	{ title="Comedy Club", colour = 4, id = 362, scale = 0.7, x = -429.9, y = 261.6, z = 83.0, group = "entertainment" },
 	{ title="Yellow Jack", colour = 15, id = 93, scale = 0.7, x = 1986.1, y = 3050.57, z = 47.2151, group = "entertainment" },
@@ -111,7 +111,7 @@ local blips = {
 	{ title = "PDM - Rockford Hills", x = -1259.8367919922, y = -361.47216796875, id = 225, colour = 57, scale = 0.8},
 	--{ title = "Best Buds", colour = 2, id = 140, x = 377.75665283203, y = -829.908203125, z = 29.302627563477, scale = 0.6 },
 	{ title = "White Widow", colour = 2, id = 140, x = 186.72137451172, y = -249.99935913086, z = 54.070400238037, scale = 0.6 },
-	{ title = "Underground Track", x = 784.30633544922, y = -1868.2249755859, id = 38, colour = 62, scale = 0.8, group = "entertainment"},
+	--{ title = "Underground Track", x = 784.30633544922, y = -1868.2249755859, id = 38, colour = 62, scale = 0.8, group = "entertainment"},
 	{ title = "Untamed Autos", x = 1149.8494, y =  -781.1504, id = 402, colour = 5, scale = 0.9},
 	--{ title = "Fight Club", x = 1059.5687255859, y = -2409.5798339844, id = 210, colour = 0, scale = 0.4, group = "entertainment"},
 	{ title = "RPG", x = -795.98742675781, y = -219.36700439453, id = 402, colour = 5, scale = 0.9},
@@ -121,6 +121,8 @@ local blips = {
 	{ title = "Autocare Garage", x = 945.94091796875, y = -986.71118164063, id = 402, colour = 5, scale = 0.9},
 	{ title = "Apartments", x = -914.08343505859, y = -1306.4748535156, id = 40, colour = 0, scale = 0.7},
 	{ title = "Apartments", x = 325.38638305664, y = -209.88813781738, id = 40, colour = 0, scale = 0.7},
+	{ title = "Arena", x = -1295.9306640625, y = -3389.06640625, id = 76, colour = 0, scale = 0.7},
+	{ title = "Pawn Shop", x = 184.53681945801, y = -1320.5942382813, id = 267, colour = 0, scale = 0.6},
 }
 
 Citizen.CreateThread(function()

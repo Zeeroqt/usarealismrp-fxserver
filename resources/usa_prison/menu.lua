@@ -19,12 +19,13 @@ local vehicles = {
   { name = "2016 Ford Taurus", hash = GetHashKey("p16tau") },
   { name = "2018 Dodge Charger", hash = GetHashKey("p18char") },
   { name = "2018 Ford F-250", hash = GetHashKey("p18xl") },
+  { name = "2023 Ram TRX", hash = GetHashKey("trx") },
   { name = "2020 Ford Explorer", hash = GetHashKey("p20exp") },
   { name = "2020 Chevorlet Tahoe", hash = GetHashKey("p20tah") },
   { name = "2021 Dodge Durango", hash = GetHashKey("p21dur") },
   { name = "2021 Chevorlet Tahoe", hash = GetHashKey("p21tah") },
   { name = "Ford F-150", hash = GetHashKey("sotruck") },
-  { name = "BMW 1200RT", hash = GetHashKey("1200RT") },
+  { name = "BMW Bike", hash = GetHashKey("polbike3") },
   { name = "Dodge Charger Hellcat", hash = GetHashKey("intchar") },
   { name = "Ford Mustang", hash = GetHashKey("npolstang") },
   { name = "Dodge Challenger", hash = GetHashKey("npolchal") },
@@ -40,7 +41,7 @@ local vehicles = {
 local PRISON_GUARD_SIGN_IN_LOCATIONS = {
     {x = 1690.71484375, y = 2591.3149414063, z = 45.914203643799, vehSpawn = vector3(1696.0581054688, 2599.6557617188, 45.56489944458)},
     {x = 1849.0, y = 2599.5, z = 45.8, vehSpawn = vector3(1854.4420166016, 2599.0654296875, 45.672290802002)}, -- front
-    {x = 1834.2426757813, y = 2572.6655273438, z = 46.014339447021}, -- Prison Locker Room
+    {x = 1778.3930664063,y = 2548.5463867188, z = 45.797786712646}, -- inside prison locker room
     {x = 1853.5485839844, y = 3688.4887695312, z = 29.818534851074}, -- Sandy SO
     -- {x = 853.53967285156, y = -1313.1147460938, z = 28.244941711426}, -- La Mesa PD
     {x = -449.33654785156, y = 6010.4638671875, z = 31.716360092163}, -- Paleto SO

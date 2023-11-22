@@ -2,6 +2,7 @@ resource_manifest_version '05cfa83c-a124-4cfa-a768-c24a5811d8f9'
 lua54 'yes'
 
 client_scripts {
+  "itemImages.lua",
   '@meta_target/lib/target.lua',
   "cl_interaction.lua",
   "cl_droppedItems.lua",
@@ -12,7 +13,8 @@ client_scripts {
 server_scripts {
   "sv_interaction.lua",
   "sv_droppedItems.lua",
-  "inventory/hotkeys/sv_hotkeys.lua"
+  "inventory/hotkeys/sv_hotkeys.lua",
+  "server/*.lua"
 }
 
 shared_scripts {

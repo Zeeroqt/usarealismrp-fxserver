@@ -155,7 +155,7 @@ hospitalLocations = {
     {307.10046386719, -595.07073974609, 43.284019470215}, -- upper PB
     {350.97692871094, -587.77874755859, 28.796844482422}, -- lower PB
     {-817.61511230469, -1236.6121826172, 7.3374252319336}, -- viceroy medical
-    {1768.4294433594, 2570.2172851563, 45.729831695557}, -- prison
+    {1782.0440673828, 2556.306640625, 45.797794342041}, -- prison
     {1832.7521, 3677.0686, 34.2749}, -- sandy
     {-251.8987, 6334.1558, 32.4272} -- Paleto Clinic
 }
@@ -164,7 +164,7 @@ hospitalLocations = {
 effects = {} -- when you take damage for a specific reason, you may be put into an effect
 injuredParts = {} -- injured body parts, and their wounds as the value
 
------- NOTIFY PLAYER OF INJURIES ------
+local lastNotifyTime = nil
 
 RegisterNetEvent('injuries:showMyInjuries')
 AddEventHandler('injuries:showMyInjuries', function()
@@ -273,7 +273,8 @@ Citizen.CreateThread(function()
                         local secondsBeforeNextStage = data.bleed - (secondsPerStage * injuredParts[bone][injury].stage)
                         if injuredParts[bone][injury].timer == secondsBeforeNextStage and injuredParts[bone][injury].stage < 3 then
                             injuredParts[bone][injury].stage = injuredParts[bone][injury].stage + 1
-                            NotifyPlayerOfInjuries()
+                            --NotifyPlayerOfInjuries()
+                            exports.globals:notify("You're injured. Do /injuries to inspect.")
                         end
                     elseif not IsEntityDead(playerPed) then
                         if not GetScreenEffectIsActive('Rampage') then
@@ -361,7 +362,8 @@ AddEventHandler('DamageEvents:EntityDamaged', function(entity, attacker, weaponH
 						--print('added injuredParts['.. damagedBone..']['..weaponHash..']')
 						TriggerServerEvent('injuries:saveData', injuredParts)
 						Citizen.Wait(2000)
-						NotifyPlayerOfInjuries()
+						--NotifyPlayerOfInjuries()
+                        exports.globals:notify("You're injured. Do /injuries to inspect.")
 					end
                 end
                 return
@@ -433,7 +435,11 @@ function RegisterInjuries(entity, weaponHash)
                         --print('added injuredParts['.. damagedBone..']['..weaponHash..']')
                         TriggerServerEvent('injuries:saveData', injuredParts)
                         Citizen.Wait(2000)
-                        NotifyPlayerOfInjuries()
+                        --NotifyPlayerOfInjuries()
+                        if not lastNotifyTime or GetGameTimer() - lastNotifyTime > 30 * 1000 then
+                            exports.globals:notify("You're injured. Do /injuries to inspect.")
+                            lastNotifyTime = GetGameTimer()
+                        end
                     end
                     return
                 end

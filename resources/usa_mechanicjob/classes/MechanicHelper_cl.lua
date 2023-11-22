@@ -1,14 +1,8 @@
 MechanicHelper = {}
-
 MechanicHelper.animations = {}
 MechanicHelper.animations.repair = {}
 MechanicHelper.animations.repair.dict = "mini@repair"
 MechanicHelper.animations.repair.name = "fixing_a_player"
-
-MechanicHelper.UPGRADE_INSTALL_TIME = 300000
-
-MechanicHelper.LEVEL_2_RANK_THRESH = 50
-MechanicHelper.LEVEL_3_RANK_THRESH = 300
 
 local LONG_SKILL_CHECK = {areaSize = 40, speedMultiplier = 0.4}
 
@@ -157,18 +151,18 @@ MechanicHelper.useMechanicTools = function(veh, repairCount, cb)
             
             local todoSkillChecks = {}
             local numLongSkillChecks = nil
+            local easyMedium = {areaSize = 50, speedMultiplier = 1.25}
             
-            if repairCount >= MechanicHelper.LEVEL_3_RANK_THRESH then
-                todoSkillChecks = {'easy', 'medium', 'easy', 'easy', 'easy', 'easy'}
+            if repairCount >= Config.LEVEL_3_RANK_THRESH then
+                todoSkillChecks = {'easy', easyMedium, 'easy', 'easy', 'easy', 'easy'}
                 numLongSkillChecks = 6
-            elseif repairCount >= MechanicHelper.LEVEL_2_RANK_THRESH then
-                todoSkillChecks = {'easy', 'medium', 'easy', 'medium', 'easy', 'medium', 'easy'}
+            elseif repairCount >= Config.LEVEL_2_RANK_THRESH then
+                todoSkillChecks = {'easy', easyMedium, 'easy', 'easy'}
                 numLongSkillChecks = 10
             else
-                todoSkillChecks = {'easy', 'medium', 'medium', 'medium', 'medium', 'medium', 'medium'}
+                todoSkillChecks = {'easy', easyMedium, 'easy', easyMedium, easyMedium}
                 numLongSkillChecks = 14
             end
-
             for i = 1, numLongSkillChecks do
                 table.insert(todoSkillChecks, 1, LONG_SKILL_CHECK)
             end
@@ -183,7 +177,10 @@ MechanicHelper.useMechanicTools = function(veh, repairCount, cb)
                     SetVehicleEngineHealth(veh, 800.0)
                 end
 
+                NetworkRequestControlOfEntity(veh)
+                Wait(300)
                 FixAllTires(veh)
+                TriggerEvent("kq_wheeldamage:fixCar", veh)
                 success = true
                 cb(true)
             else 
@@ -207,15 +204,16 @@ MechanicHelper.useRepairKit = function(veh, repairCount, cb)
             TriggerEvent("dpemotes:command", 'e', GetPlayerServerId(ped), {"mechanic"})
             local todoSkillChecks = {}
             local numLongSkillChecks = nil
+            local easyMedium = {areaSize = 50, speedMultiplier = 1.25}
             
-            if repairCount >= MechanicHelper.LEVEL_3_RANK_THRESH then
-                todoSkillChecks = {'easy', 'medium', 'easy', 'easy', 'easy', 'easy'}
+            if repairCount >= Config.LEVEL_3_RANK_THRESH then
+                todoSkillChecks = {'easy', easyMedium, 'easy', 'easy', 'easy', 'easy'}
                 numLongSkillChecks = 6
-            elseif repairCount >= MechanicHelper.LEVEL_2_RANK_THRESH then
-                todoSkillChecks = {'easy', 'medium', 'easy', 'medium', 'easy', 'medium', 'easy'}
+            elseif repairCount >= Config.LEVEL_2_RANK_THRESH then
+                todoSkillChecks = {'easy', easyMedium, 'easy', 'easy'}
                 numLongSkillChecks = 10
             else
-                todoSkillChecks = {'easy', 'medium', 'medium', 'medium', 'medium', 'medium', 'medium'}
+                todoSkillChecks = {'easy', easyMedium, 'easy', easyMedium, easyMedium}
                 numLongSkillChecks = 14
             end
 
@@ -225,24 +223,26 @@ MechanicHelper.useRepairKit = function(veh, repairCount, cb)
             
             local passed = lib.skillCheck(todoSkillChecks)
             if passed then
-                TriggerServerEvent("usa:removeItem", "Repair Kit", 1)
                 SetVehicleDoorShut(veh, 4, false)
                 if not IsVehicleDriveable(veh, true) then
                     SetVehicleUndriveable(veh, false)
-                    SetVehicleEngineHealth(veh, 500.0)
+                    SetVehicleEngineHealth(veh, 650.0)
                 else
-                    SetVehicleEngineHealth(veh, 600.0)
+                    SetVehicleEngineHealth(veh, 850.0)
                 end
                 
+                NetworkRequestControlOfEntity(veh)
+                Wait(300)
                 FixAllTires(veh)
+                TriggerEvent("kq_wheeldamage:fixCar", veh)
                 success = true
                 cb(true)
             else
-                if math.random() > 0.50 then
-                    TriggerServerEvent("usa:removeItem", "Repair Kit", 1)
-                    TriggerEvent("usa:notify", "Repair Kit have worn out!")
-                end
                 cb(false)
+            end
+	    if math.random() > 0.50 then
+                TriggerServerEvent("usa:removeItem", "Repair Kit", 1)
+                TriggerEvent("usa:notify", "Repair Kit has worn out!")
             end
             Wait(500)
             TriggerEvent("dpemotes:command", 'e', GetPlayerServerId(ped), {"c"})
@@ -257,10 +257,9 @@ MechanicHelper.installUpgrade = function(veh, upgrade, cb)
     TriggerEvent("interaction:setBusy", true)
     SetVehicleDoorOpen(veh, 4, false, false)
 
-    if lib.progressCircle({
-        duration = MechanicHelper.UPGRADE_INSTALL_TIME,
+    if lib.progressBar({
+        duration = Config.UPGRADE_INSTALL_TIME,
         label = 'Installing Part...',
-        position = 'bottom',
         useWhileDead = false,
         canCancel = true,
         disable = {
@@ -273,7 +272,7 @@ MechanicHelper.installUpgrade = function(veh, upgrade, cb)
             clip = MechanicHelper.animations.repair.name,
             flag = 39,
         },
-    }) then 
+    }) then
         if MechanicHelper.UPGRADE_FUNC_MAP[upgrade.id] then
             MechanicHelper.UPGRADE_FUNC_MAP[upgrade.id](veh, upgrade.increaseAmount) -- call appropriate native
         end
@@ -281,7 +280,7 @@ MechanicHelper.installUpgrade = function(veh, upgrade, cb)
         SetVehicleDoorShut(veh, 4, false)
         cb(true)
         TriggerEvent("interaction:setBusy", false)
-    else 
+    else
         cb(false)
         TriggerEvent("interaction:setBusy", false)
     end

@@ -97,7 +97,7 @@ PARTS = {
 		price = 5000,
 		quantity = 1,
 		weight = 50,
-    type = "mechanicPart"
+    	type = "mechanicPart"
 	},
 	["Underglow Kit"] = {
 		name = "Underglow Kit",
@@ -204,5 +204,12 @@ PARTS = {
 		weight = 10,
 		type = "misc",
 		notStackable = true
+	},
+	["Car Wash Kit"] = {
+		name = "Car Wash Kit",
+		price = 3500,
+		quantity = 1,
+		weight = 30,
+		type = "misc"
 	},
 }

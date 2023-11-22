@@ -157,7 +157,7 @@ AddEventHandler("character:swap--check-distance", function()
 	local mycoords = GetEntityCoords(GetPlayerPed(-1))
 	for i = 1, #swap_locations do
 		local location = swap_locations[i]
-		if GetDistanceBetweenCoords(location.x, location.y, location.z, mycoords) < 8 then
+		if GetDistanceBetweenCoords(location.x, location.y, location.z, mycoords) < 8 or exports["usa-properties-og"]:isNearbyPropertyOwner() then
 			TriggerEvent("Radio.Set", false, {})
 			TriggerEvent("hotkeys:setCurrentSlotPassive", nil)
 			TriggerEvent("radio:unsubscribe")
@@ -255,10 +255,10 @@ RegisterNUICallback('select-character', function(data, cb)
 			}
 		elseif data.spawn:find("Los Santos")  then
 			spawn_coords_closed_menu = {
-				x = -555.16033935547,
-				y = -628.07855224609,
-				z = 34.67671585083,
-				heading = 174.0
+				x = 222.78773498535,
+				y = -874.51330566406,
+				z = 30.49209022522,
+				heading = 335.0
 			}
 		elseif data.spawn:find("Property") then
 			spawn_coords_closed_menu = data.charSavedSpawn

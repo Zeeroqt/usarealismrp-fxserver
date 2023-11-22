@@ -7,7 +7,7 @@ local createdCharCounts = {}
 
 TriggerEvent('es:addCommand', 'swap', function(source, args, user)
 	TriggerClientEvent("character:swap--check-distance", source)
-end, { help = "Swap to another character (Must be at the clothing store)." })
+end, { help = "Swap to another character (Must be at the clothing store or an owned property)." })
 
 
 RegisterServerEvent("character:swapChar")
@@ -18,7 +18,6 @@ AddEventHandler("character:swapChar", function()
 	char.set("lastRecordedLocation", GetEntityCoords(GetPlayerPed(usource)))
 	exports["usa_rp2"]:handlePlayerDropDutyLog(char, GetPlayerName(usource), accountIdentifier)
 	char.set("job", "civ")
-	TriggerEvent("high_callback:drop", usource)
 	exports["usa-characters"]:SaveCurrentCharacter(usource, function()
 		local steamID = GetPlayerIdentifiers(usource)[1]
 		exports["usa-characters"]:LoadCharactersForSelection(steamID, function(characters)
@@ -65,6 +64,7 @@ end)
 
 RegisterServerEvent("character:delete")
 AddEventHandler("character:delete", function(data)
+	-- todo: make sure calling client actually owns a character with provided data.id to prevent deleting other players' chars
 	local usource = source
 	local id = data.id
 	local rev = data.rev
@@ -73,6 +73,8 @@ AddEventHandler("character:delete", function(data)
 	if characterAge >= 3 then
 		DeleteCharacterById(id, rev, function()
 			print("Done deleting character with id: " .. id .. ".")
+			TriggerEvent("usa-properties-og:server:resetcharproperties", id)
+			TriggerEvent("usa-businesses:server:resetcharbusinesses", id)
 			TriggerEvent("character:getCharactersAndOpenMenu", "home", usource)
 		end)
 	else

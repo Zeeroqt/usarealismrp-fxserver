@@ -16,7 +16,7 @@ AddEventHandler("vehicleCommands:spawnVehicle", function(modelName, userJob)
 	SetVehicleExplodesOnHighExplosionDamage(vehicle, false)
 	SetVehicleEngineOn(vehicle, true, true, false)
 
-	if modelName == "1200RT" then
+	if modelName == "polbike3" then
 		ModifyVehicleTopSpeed(vehicle, 0.0) -- reset first to avoid doubling up issue
         ModifyVehicleTopSpeed(vehicle, 30.0)
 	end
@@ -45,7 +45,7 @@ AddEventHandler("vehicleCommands:spawnVehicle", function(modelName, userJob)
 
 	local plate = GetVehicleNumberPlateText(vehicle)
 	TriggerServerEvent('mdt:addTempVehicle', 'Govt. Vehicle [' .. userJob .. ']', "", plate)
-
+        TriggerServerEvent("fuel:setFuelAmount", plate, 100)
 end)
 
 RegisterNetEvent("vehicleCommands:setLivery")

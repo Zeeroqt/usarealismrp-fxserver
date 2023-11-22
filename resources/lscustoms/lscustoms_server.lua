@@ -5,6 +5,10 @@ local tbl = {
 	[4] = {locked = false, player = nil},
 	[5] = {locked = false, player = nil},
 	[6] = {locked = false, player = nil},
+	[7] = {locked = false, player = nil},
+	[8] = {locked = false, player = nil},
+	[9] = {locked = false, player = nil},
+	[10] = {locked = false, player = nil},
 }
 
 prices = {
@@ -110,7 +114,7 @@ AddEventHandler("LSC:buttonSelected", function(name, button, mname, business)
 		local job = char.get("job")
 		local charMoney = char.get("money")
 		local charBank = char.get("bank")
-		button.price = math.abs(button.price) -- prevent mem hack to gain money
+		button.price = math.abs(button.price) -- prevent hack to gain money
 		--[[
 		if mname ~= 'main' then
 			for menuname, contents in pairs(prices) do
@@ -160,7 +164,7 @@ AddEventHandler("LSC:buttonSelected", function(name, button, mname, business)
 				end
 			elseif discountedPrice <= charBank then
 				TriggerClientEvent("usa:notify", source, "Not enough cash, taking from bank!")
-				char.removeBank(discountedPrice) -- half off for LEO/EMS
+				char.removeBank(discountedPrice, "LS Customs") -- half off for LEO/EMS
 				TriggerClientEvent("LSC:buttonSelected", source, name, button, true)
 				if business then
 					exports["usa-businesses"]:GiveBusinessCashPercent(business, button.price)
@@ -178,7 +182,7 @@ AddEventHandler("LSC:buttonSelected", function(name, button, mname, business)
 				end
 			elseif button.price <= charBank then
 				TriggerClientEvent("usa:notify", source, "Not enough cash, taking from bank!")
-				char.removeBank(button.price) -- -- full price
+				char.removeBank(button.price, "LS Customs") -- -- full price
 				TriggerClientEvent("LSC:buttonSelected", source, name, button, true)
 				if business then
 					exports["usa-businesses"]:GiveBusinessCashPercent(business, button.price)
@@ -388,3 +392,16 @@ function JobGetsDiscountedUpgrades(job)
 		return false
 	end
 end
+
+RegisterServerCallback { 
+	eventName = "lsc:getVehiclePrice",
+	eventCallback = function(src, plate)
+		plate = exports.globals:trim(plate)
+		local veh = exports.essentialmode:getDocument("vehicles", plate)
+		if veh then
+			return veh.price
+		else
+			return nil
+		end
+	end
+}

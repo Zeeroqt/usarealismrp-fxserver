@@ -535,9 +535,17 @@ end)
 RegisterNetEvent("usa:notify")
 AddEventHandler("usa:notify", function(msg, chatMsg)
   if msg ~= false then
-    SetNotificationTextEntry("STRING")
-    AddTextComponentString(msg)
-    DrawNotification(0,1)
+    msg = msg:gsub("~y~", "")
+    msg = msg:gsub("~w~", "")
+    msg = msg:gsub("~g~", "")
+    msg = msg:gsub("~r~", "")
+    msg = msg:gsub("~s~", "")
+    lib.notify({
+      title = msg,
+      position = "center-left"
+      --description = 'Notification description',
+      --type = 'success'
+    })
   end
   if chatMsg then
       TriggerEvent('chatMessage', '', {0,0,0}, '^0' .. chatMsg)
@@ -1000,15 +1008,20 @@ local STATIC_OBJECTS = {
     heading = 275.0,
     obj = ATM_MODEL2
   },
-  PRISON_TV = {
-    coords = vector3(1749.0377197265625, 2478.02294921875, 44.60413619995117),
-    heading = 30.0,
-    obj = PRISON_TV
+  MRPDINSIDE_ATM = {
+    coords = vector3(450.7041015625, -978.35429199219, 29.659582824707),
+    heading = 0.0,
+    obj = ATM_MODEL2
   },
-  PRISON_PHONE = {
-    obj = PHONEBOX_STANDING,
-    coords = vector3(1772.794, 2495.62, 44.74072),
-    heading = 300.0
+  LEGACYTAVERN_ATM = {
+    coords = vector3(-563.4963, 280.9992, 81.07641),
+    heading = 175.0,
+    obj = ATM_MODEL2
+  },
+  ARENA_AMMUNATION = {
+    obj = GetHashKey("gr_prop_gr_bench_02b"),
+    coords = vector3(-1306.193, -3388.326, 12.94015),
+    heading = 58.0
   }
   --LEGION = {226.48237609863, -895.41094970703, 28.692138671875},
   --UPPER_PILLBOX = {242.40295410156, -565.30682373047, 41.278789520264},
@@ -1042,13 +1055,25 @@ local STATIC_OBJECTS = {
   --]]
 }
 
-for name, info in pairs(STATIC_OBJECTS) do
-  info.handle = CreateObject(info.obj, info.coords.x, info.coords.y, info.coords.z, 0, 0, 0)
+for _, info in pairs(STATIC_OBJECTS) do
+  local handle = CreateObject(info.obj, info.coords.x, info.coords.y, info.coords.z, false, false, false)
+  info.handle = handle
   if info.heading then
-    SetEntityHeading(info.handle, info.heading)
+    SetEntityHeading(handle, info.heading)
   end
-  FreezeEntityPosition(info.handle, true)
+  FreezeEntityPosition(handle, true)
 end
+
+AddEventHandler('onResourceStop', function(resourceName)
+  if GetCurrentResourceName() == resourceName then
+    for _, info in pairs(STATIC_OBJECTS) do
+      if info.handle and DoesEntityExist(info.handle) then
+        DeleteObject(info.handle)
+        info.handle = nil
+      end
+    end
+  end
+end)
 
 -- Vehicle Neon Controls --
 local VehiclesWithNeons = {}
@@ -1169,5 +1194,21 @@ Citizen.CreateThread(function()
         lastPedWeSetConfigFor = me
     end
     Wait(1)
+  end
+end)
+
+-- Remove Legacy Tavern Peds --
+Citizen.CreateThread(function()
+  while true do
+    ClearAreaOfPeds(-556.6475, 286.6953, 82.17631, 25.0, 1)
+    Citizen.Wait(10000)
+  end
+end)
+
+-- Remove Legacy Tavern Music --
+Citizen.CreateThread(function()
+  while true do
+    SetStaticEmitterEnabled("collision_9qv4ecm", false)
+    Citizen.Wait(10000)
   end
 end)

@@ -334,6 +334,12 @@ Config.Stickers = {
                 flip = false,
                 dict = 'real_life_brands'
             },
+			{
+                name = 'Uber',
+                price = 150,
+                flip = false,
+                dict = 'real_life_brands'
+            },
         }
     },
     {
@@ -771,6 +777,29 @@ Config.Stickers = {
             },
 			{
                 name = 'Stickerbomb',
+                price = 95,
+                flip = false,
+                dict = 'others'
+            },
+			{
+                name = 'Flirt',
+                price = 95,
+                flip = false,
+                dict = 'others'
+            },			{
+                name = 'Heart',
+                price = 95,
+                flip = false,
+                dict = 'others'
+            },
+			{
+                name = 'Jett',
+                price = 95,
+                flip = false,
+                dict = 'others'
+            },
+			{
+                name = 'Camel Tow',
                 price = 95,
                 flip = false,
                 dict = 'others'

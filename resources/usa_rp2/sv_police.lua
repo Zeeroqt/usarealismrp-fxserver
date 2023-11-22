@@ -68,7 +68,7 @@ TriggerEvent('es:addJobCommand', 'ticket', { 'sheriff', 'police' , 'judge', "cor
 	local target_name = target.getFullName()
 	local target_bank = target.get('bank')
 	TriggerClientEvent('usa:notify', source, 'Ticket issued to ~y~'..target_name..'~s~ for ~y~$'..amount..'~s~!')
-	target.removeBank(amount)
+	target.removeBank(amount, "Police Ticket")
 	local ticket = {
 		reason = reason,
 		fine = amount,
@@ -316,16 +316,20 @@ AddEventHandler("search:civSearchedCheckFailedNotify", function(playerId)
 end)
 
 TriggerEvent('es:addCommand', 'search', function(source, args, char)
+	if exports["usa-arena"]:isPlayerPlaying(source) then
+		TriggerClientEvent("usa:notify", source, "Can't do that here", "^3INFO: ^0Can't search when playing in the arena")
+		return
+	end
 	local job = char.get("job")
-	if job == "civ" then
-		TriggerClientEvent("search:attemptToSearchNearestPerson", source)
-	elseif job == "sheriff" or job == "corrections" then
+	if job == "sheriff" or job == "corrections" then
 		if not tonumber(args[2]) then
 			TriggerClientEvent("search:searchNearest", source, source)
 		else
 			TriggerClientEvent("usa:playAnimation", source, "anim@move_m@trash", "pickup", -8, 1, -1, 53, 0, 0, 0, 0, 4)
 			TriggerEvent("search:searchPlayer", tonumber(args[2]), source)
 		end
+	else
+		TriggerClientEvent("search:attemptToSearchNearestPerson", source)
 	end
 end, {help = "Search the nearest person or vehicle"})
 

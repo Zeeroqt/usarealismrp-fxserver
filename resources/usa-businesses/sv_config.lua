@@ -445,6 +445,14 @@ BUSINESSES = {
 		lastRobbedTime = 0,
 		price = 6000
 	},
+	["Casino"] = {
+		position = {1114.8431396484, 243.80151367188, -45.840980529785},
+		cameraID = 'casino',
+		isBeingRobbed = false,
+		lastRobbedTime = 0,
+		price = 25000,
+		purchasePercentage = 0.09
+	},
 }
 
 RegisterServerEvent("businesses:load")

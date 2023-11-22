@@ -77,8 +77,12 @@ local fuelData = {
 	fuelUsage = 0.0,
 	lastVeh = nil,
 	isRefuelling = false,
-	displayFuel = true
+	displayFuel = false
 }
+
+exports("getFuelLevel", function()
+	return fuelData.fuelAmount
+end)
 
 _menuPool = NativeUI.CreatePool()
 mainMenu = NativeUI.CreateMenu("Fuel Station", "~b~Welcome!", 0 --[[X COORD]], 320 --[[Y COORD]])
@@ -176,12 +180,12 @@ Citizen.CreateThread(function()
 				end
 			end
 		end
-		if fuelData.displayFuel then
-			if IsPedInAnyVehicle(playerPed, false) and GetPedInVehicleSeat(playerVeh, -1) == playerPed and GetVehicleClass(playerVeh) ~= 13 and GetVehicleClass(playerVeh) ~= 21 then
-				if not wasInVeh then
-					TriggerServerEvent('fuel:returnFuelAmount', exports.globals:trim(GetVehicleNumberPlateText(playerVeh)))
-					wasInVeh = true
-				end
+		if IsPedInAnyVehicle(playerPed, false) and GetPedInVehicleSeat(playerVeh, -1) == playerPed and GetVehicleClass(playerVeh) ~= 13 and GetVehicleClass(playerVeh) ~= 21 then
+			if not wasInVeh then
+				TriggerServerEvent('fuel:returnFuelAmount', exports.globals:trim(GetVehicleNumberPlateText(playerVeh)))
+				wasInVeh = true
+			end
+			if fuelData.displayFuel then
 				if math.floor(fuelData.fuelAmount) <= 10 then
 					DrawTxt(0.708, 1.418, 1.0, 1.0, 0.55, math.floor(fuelData.fuelAmount) .. '', 255, 0, 0, 255)
 					DrawTxt(0.729, 1.425, 1.0, 1.0, 0.35, 'Fuel', 255, 0, 0, 255)
@@ -189,10 +193,10 @@ Citizen.CreateThread(function()
 					DrawTxt(0.708, 1.418, 1.0, 1.0, 0.55, math.floor(fuelData.fuelAmount) .. '', 255, 255, 255, 255)
 					DrawTxt(0.729, 1.425, 1.0, 1.0, 0.35, 'Fuel', 255, 255, 255, 255)
 				end
-			else
-				if wasInVeh then
-					wasInVeh = false
-				end
+			end
+		else
+			if wasInVeh then
+				wasInVeh = false
 			end
 		end
 	end
@@ -258,6 +262,7 @@ RegisterNetEvent('fuel:refuelAmount')
 AddEventHandler('fuel:refuelAmount', function(_fuelAmount)
 	local startTime = GetGameTimer()
 	local timeWaiting = 500 * _fuelAmount
+	fuelData.isRefuelling = true
 	Citizen.CreateThread(function()
 		while _fuelAmount > 0 do
 			Citizen.Wait(0)
@@ -266,11 +271,9 @@ AddEventHandler('fuel:refuelAmount', function(_fuelAmount)
 			DrawTimer(startTime, timeWaiting, 1.42, 1.475, 'REFUELING')
 		end
 	end)
-
-	fuelData.isRefuelling = true
 	while _fuelAmount > 0 do
 		Citizen.Wait(500)
-		if fuelData.fuelAmount == 100 then
+		if fuelData.fuelAmount >= 100 then
 			break
 		else
 			_fuelAmount = _fuelAmount - 1

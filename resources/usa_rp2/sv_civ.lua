@@ -50,6 +50,10 @@ end)
 -- Steal a player's cash --
 ---------------------------
 TriggerEvent('es:addCommand','rob', function(source, args, char)
+	if exports["usa-arena"]:isPlayerPlaying(source) then
+		TriggerClientEvent("usa:notify", source, "Can't do that here", "^3INFO: ^0Can't rob when playing in the arena")
+		return
+	end
 	TriggerClientEvent("crim:attemptToRobNearestPerson", source)
 end, {
 	help = "Steal the nearest player's money."
@@ -124,7 +128,7 @@ end, {
 RegisterServerEvent("crim:foundPlayerToTie")
 AddEventHandler("crim:foundPlayerToTie", function(id, tying_up, x, y, z, heading)
 	if tying_up then
-		TriggerClientEvent("crim:areHandsUp", id, source, id, "tie", x, y, z, heading)
+		TriggerClientEvent("crim:canBeTied", id, source, id, "tie", x, y, z, heading)
 	else
 		TriggerClientEvent("crim:untieHands", id, source, x, y, z, heading)
 		TriggerClientEvent('crim:tyingHandsAnim', source)
@@ -132,8 +136,8 @@ AddEventHandler("crim:foundPlayerToTie", function(id, tying_up, x, y, z, heading
 end)
 
 RegisterServerEvent("crim:continueTyingHands")
-AddEventHandler("crim:continueTyingHands", function(fromSource, target, areHandsUp, x, y, z, heading)
-	if areHandsUp then
+AddEventHandler("crim:continueTyingHands", function(fromSource, target, canBeTied, x, y, z, heading)
+	if canBeTied then
 		local char = exports["usa-characters"]:GetCharacter(fromSource)
 		if char.hasItem(SETTINGS["tie"].required_item_name) then
 			char.removeItem(SETTINGS["tie"].required_item_name, 1)
@@ -144,7 +148,7 @@ AddEventHandler("crim:continueTyingHands", function(fromSource, target, areHands
 			TriggerClientEvent("usa:notify", fromSource, "You need rope to do that!")
 		end
 	else
-		TriggerClientEvent("usa:notify", fromSource, "Person's hands are not up!")
+		TriggerClientEvent("usa:notify", fromSource, "Must be knocked out or hands up!")
 	end
 end)
 
@@ -408,16 +412,6 @@ AddEventHandler("vehicle:confirmSell", function(details, wants_to_buy)
 	end
 end)
 
-TriggerEvent('es:addCommand', 'selfie', function(source, args, char)
-	TriggerEvent("usa:getPlayerItem", source, "Cell Phone", function(phone)
-			if phone then
-				TriggerClientEvent("camera:selfie", source)
-			else
-				TriggerClientEvent("usa:notify", source, "You need a cell phone to do that!")
-			end
-		end)
-end, {help = "Take a selfie!"})
-
 function SendDiscordMessage(content, url, color)
 	PerformHttpRequest(url, function(err, text, headers)
 		if text then
@@ -444,8 +438,8 @@ function TradeVehicle(details)
 		buyer.removeMoney(details.price)
 		seller.giveMoney(details.price)
 	elseif buyer.get("bank") >= details.price then
-		buyer.removeBank(details.price)
-		seller.giveBank(details.price)
+		buyer.removeBank(details.price, "Vehicle Purchase ("..details.plate..")")
+		seller.giveBank(details.price, "Vehicle Sale ("..details.plate..")")
 	else
 		TriggerClientEvent("usa:notify", details.target, "Not enough money to pruchase vehicle!")
 		TriggerClientEvent("usa:notify", details.source, "Person did not have enough money to pruchase vehicle!")

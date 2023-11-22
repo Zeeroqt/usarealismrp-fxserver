@@ -31,7 +31,7 @@ end)
 IsCar = function(veh)
             local vc = GetVehicleClass(veh)
             local model = GetEntityModel(veh)
-            return (vc >= 0 and vc <= 7) or (vc >= 9 and vc <= 12) or (vc >= 15 and vc <= 20) and model ~= GetHashKey("policeb") and model ~= GetHashKey("1200RT")
+            return (vc >= 0 and vc <= 7) or (vc >= 9 and vc <= 12) or (vc >= 15 and vc <= 20) and model ~= GetHashKey("polbike3")
         end
 
 Fwv = function (entity)
@@ -88,6 +88,7 @@ Citizen.CreateThread(function()
                 TriggerServerEvent('hud:getBelt', beltOn)
                 TriggerServerEvent('display:shareDisplay', 'clicks seatbelt', 2, 470, 10, 3000)
                 TriggerServerEvent('InteractSound_SV:PlayWithinDistance', 0.5, 'seatbelt-click', 0.2)
+                TriggerEvent("seatbelt:client:ToggleSeatbelt")
             end
 
         elseif wasInCar then

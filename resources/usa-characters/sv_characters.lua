@@ -153,57 +153,10 @@ function CreateNewCharacter(src, data, cb)
 end
 
 function InitializeCharacter(src, characterID)
-    -- print(src)
-    -- print(characterID)
-    MySQL.ready(function ()
-      MySQL.Async.fetchAll('SELECT * FROM users WHERE ownerIdentifier = @id', { ['@id'] = characterID }, function(result)
-        if (json.encode(result) == "[]") then
-          TriggerEvent("es:exposeDBFunctions", function(db)
-            db.getAllDocumentsFromDbLimit("phone-contacts", 1000000, function(records)
-              local contactTable = {}
-              for i,v in ipairs(records) do
-                -- print(v.ownerIdentifier)
-                -- print(v.number)
-                -- print(v.display)
-                if v.ownerIdentifier == characterID then
-                  MySQL.ready(function ()
-                    -- print("adding record")
-                    MySQL.Async.execute('INSERT INTO phone_contacts (owner, number, name) VALUES (@id, @number, @name);',{ ['@id'] = v.ownerIdentifier, ['@number'] = v.number, ['@name'] = v.display}, function(affectedRows)
-                      -- print(affectedRows)
-                    end)
-                  end)
-                end
-              end
-            end)
-          end)
-          TriggerEvent("es:exposeDBFunctions", function(db) 
-            local phoneNumber = nil
-            db.getDocumentById("phone-users", characterID, function(doc)
-              if doc ~= false then
-                print(doc.number)
-                phoneNumber = doc.number
-              end
-              print("adding record")
-              print(json.encode(result))
-              if phoneNumber then
-                MySQL.Async.execute('INSERT INTO users (ownerIdentifier, phone) VALUES (@id, @phoneNumber);',{ ['@id'] = characterID, ['@phoneNumber'] = phoneNumber}, function(affectedRows)
-                  print(affectedRows)
-                  TriggerEvent("high_callback:load", src)
-                end)
-              else
-                MySQL.Async.execute('INSERT INTO users (ownerIdentifier) VALUES (@id);',{ ['@id'] = characterID }, function(affectedRows)
-                  print(affectedRows)
-                  TriggerEvent("high_callback:load", src)
-                end)
-              end  
-            end) 
-          end)
-        else
-          print("already there")
-          TriggerEvent("high_callback:load", src)
-        end
-      end)
-    end)
+    if not doesPlayerOwnCharWithId(src, characterID) then
+      print("player did not own char that they were trying to load!")
+      return
+    end
     TriggerEvent('es:exposeDBFunctions', function(db)
         db.getDocument("characters", characterID, function(charData)
             charData.source = src
@@ -217,6 +170,7 @@ function InitializeCharacter(src, characterID)
             TriggerClientEvent("es:activateMoney", src, character.get("money")) -- make /cash work
             TriggerEvent("twitter:lastCharCheck", src, character.getFullName()) -- sign out of twitter if playing on different character than their last session
             TriggerEvent("character:loaded", character)
+            TriggerClientEvent("character:loaded", src, character)
             TriggerClientEvent("max_trains:loaded", src)
         end)
     end)
@@ -248,6 +202,10 @@ end
 function GetCharacters(cb)
     cb(CHARACTERS)
 end
+
+exports("GetCharactersSync", function()
+  return CHARACTERS
+end)
 
 function GetNumCharactersWithJob(job)
   local count = 0
@@ -310,6 +268,22 @@ function GetMinutesFromTime(time)
 	local wholemins = math.floor(minutesfrom)
 	--print("CHARACTERS:  wholemins: " .. wholemins)
 	return wholemins
+end
+
+function doesPlayerOwnCharWithId(src, charId)
+  local steamId = GetPlayerIdentifiers(src)[1]
+  local query = {
+    ["created.ownerIdentifier"] = steamId
+  }
+  local chars = exports.essentialmode:getDocumentsByRows("characters", query)
+  if chars then
+    for i = 1, #chars do
+      if chars[i]._id == charId then
+        return true
+      end
+    end
+  end
+  return false
 end
 
 TriggerEvent("es:addGroupCommand", "charlist", "superadmin", function(src, args, char, location)

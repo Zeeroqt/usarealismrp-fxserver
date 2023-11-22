@@ -189,7 +189,9 @@ AddEventHandler("properties-og:storeMoney", function(name, amount)
 		-- remove from player --
 		player.removeMoney(amount)
 		-- add to property --
-		TriggerEvent("properties:addMoney", name, amount)
+    PROPERTIES[name].storage.money = PROPERTIES[name].storage.money + amount
+    -- save property --
+    SavePropertyData(name)
 	else
 		TriggerClientEvent("usa:notify", user_source, "You don't have that much money on you!")
 	end
@@ -267,6 +269,10 @@ end
 
 RegisterServerEvent("properties-og:onStorageBtnSelected")
 AddEventHandler("properties-og:onStorageBtnSelected", function(propertyName)
+  if not ownsProperty(propertyName, source) then
+    TriggerClientEvent("usa:notify", source, "Not property owner")
+    return
+  end
   -- get property inventory
   local propertyInv = PROPERTIES[propertyName].storage.items
   -- send to interaction-menu's inventory system for display and item movement
@@ -315,6 +321,10 @@ AddEventHandler("properties-og:moveItemFromProperty", function(src, data)
   -- get item from property storage
   local inv = inventoryAsMapNotArray(PROPERTIES[data.propertyName].storage.items)
   local item = inv[data.fromSlot]
+  if item.quantity < data.quantity then
+    TriggerClientEvent("usa:notify", src, "Invalid quantity")
+    return
+  end
   -- try to store in player's inventory
   local char = exports["usa-characters"]:GetCharacter(src)
   if char.canHoldItem(item, (data.quantity or item.quantity)) then
@@ -438,35 +448,62 @@ end)
 
 -- store vehicle at property --
 RegisterServerEvent("properties:storeVehicle")
-AddEventHandler("properties:storeVehicle", function(property_name, plate) --IMPLEMENT
+AddEventHandler("properties:storeVehicle", function(property_name, plate)
   plate = exports.globals:trim(plate)
-  local usource = tonumber(source)
-  -- check if player owns veh trying to store --
-  local owns = false
-  local user = exports["usa-characters"]:GetCharacter(usource)
-  local uvehicles = user.get("vehicles")
-  for i = 1, #uvehicles do
-    if plate == uvehicles[i] then
-        owns = true
-    end
+  local src = tonumber(source)
+  if not doesVehicleBelongToAnyOwnerOfProperty(property_name, plate) then
+    TriggerClientEvent("usa:notify", src, "Vehicle does not belong to any owner of this property")
+    return
   end
-  if owns or (recentlyChangedPlates[user.get("_id")] and recentlyChangedPlates[user.get("_id")][plate]) then
-      -- store vehicle if owner --
-      TriggerEvent('es:exposeDBFunctions', function(couchdb)
-        if recentlyChangedPlates[user.get("_id")] and recentlyChangedPlates[user.get("_id")][plate] then
-          plate = recentlyChangedPlates[user.get("_id")][plate] -- if they recently changed their plate at the DMV, they still own it even though original logic says they don't
-        end
-        couchdb.updateDocument("vehicles", plate, { stored_location = property_name }, function()
-            -- delete vehicle on client --
-            TriggerClientEvent("properties:storeVehicle", usource)
-            -- remove key from inventory --
-            user.removeItem("Key -- " .. plate)
-        end)
-      end)
+  local char = exports["usa-characters"]:GetCharacter(src)
+  local vehDoc = exports.essentialmode:getDocument("vehicles", plate)
+  if vehDoc then
+    vehDoc._rev = nil
+    vehDoc.stored_location = property_name
+    exports.essentialmode:updateDocument("vehicles", plate, vehDoc)
+    TriggerClientEvent("properties:storeVehicle", src)
+    char.removeItem("Key -- " .. plate)
   else
-      TriggerClientEvent("usa:notify", usource, "You do not own that vehicle!")
+    TriggerClientEvent("usa:notify", src, "You do not own that vehicle!")
   end
 end)
+
+function doesVehicleBelongToAnyOwnerOfProperty(propertyName, plate)
+  local ownerIdent = PROPERTIES[propertyName].owner.identifier
+  local ownerDoc = exports.essentialmode:getDocument("characters", ownerIdent)
+  -- main owner
+  for i = 1, #ownerDoc.vehicles do
+    if ownerDoc.vehicles[i] == plate then
+      return true
+    end
+  end
+  -- co owners
+  for i = 1, #PROPERTIES[propertyName].coowners do
+    local coownerIdent = PROPERTIES[propertyName].coowners[i].identifier
+    local coownerDoc = exports.essentialmode:getDocument("characters", coownerIdent)
+    for j = 1, #coownerDoc.vehicles do
+      if coownerDoc.vehicles[j] == plate then
+        return true
+      end
+    end
+  end
+  -- online players (for if newly owned vehicle hasn't saved to DB yet)
+  local onlineChars = exports["usa-characters"]:GetCharactersSync()
+  for i = 1, #onlineChars do
+    for j = 1, #onlineChars[i].get("vehicles") do
+      if onlineChars[i].get("vehicles")[j] == plate then
+        local ownedProperties = GetOwnedProperties(onlineChars[i].get("_id"), true)
+        for k = 1, #ownedProperties do
+          if ownedProperties[k] == propertyName then
+            return true
+          end
+        end
+        return false
+      end
+    end
+  end
+  return false
+end
 
 -- retrieve vehicle from property --
 RegisterServerEvent("properties:retrieveVehicle")
@@ -556,17 +593,6 @@ AddEventHandler("properties:willLeave", function(name, willLeave)
   end
 end)
 
---------------------------------
--- ADD MONEY (from purchases) --
---------------------------------
-RegisterServerEvent("properties:addMoney")
-AddEventHandler("properties:addMoney", function(name, amount)
-    PROPERTIES[name].storage.money = PROPERTIES[name].storage.money + amount
-    print("$" .. amount .. " added!")
-    -- save property --
-    SavePropertyData(name)
-end)
-
 ------------------
 -- REMOVE MONEY --
 ------------------
@@ -645,22 +671,6 @@ AddEventHandler("properties:purchaseProperty", function(property)
         v.locked = true
         exports["usa_doormanager"]:toggleDoorLockByName(v.name, true)
       end
-			-- update all clients property info --
-            local PROPERTY_FOR_CLIENT = { -- only give client needed information for each property for performance reasons
-                name = property.name,
-                storage = {
-                    money = PROPERTIES[property.name].storage.money
-                },
-                fee = PROPERTIES[property.name].fee,
-                x = PROPERTIES[property.name].x,
-                y = PROPERTIES[property.name].y,
-                z = PROPERTIES[property.name].z,
-                garage_coords = PROPERTIES[property.name].garage_coords,
-                owner = PROPERTIES[property.name].owner,
-                type = PROPERTIES[property.name].type,
-                will_leave = PROPERTIES[property.name].will_leave
-            }
-			TriggerClientEvent("properties:update", -1, PROPERTY_FOR_CLIENT, true)
 			-- subtract money --
 			player.removeMoney(PROPERTIES[property.name].fee.price)
       -- save property --
@@ -711,6 +721,10 @@ end)
 ---------------------------
 RegisterServerEvent("properties:addCoOwner")
 AddEventHandler("properties:addCoOwner", function(property_name, id)
+  if not ownsProperty(property_name, source) then
+    TriggerClientEvent("usa:notify", source, "Not property owner")
+    return
+  end
   if GetPlayerName(id) then
     -- check if property has any co owners already --
     if not PROPERTIES[property_name].coowners then
@@ -726,8 +740,6 @@ AddEventHandler("properties:addCoOwner", function(property_name, id)
     table.insert(PROPERTIES[property_name].coowners, coowner)
     -- save --
     SavePropertyData(property_name)
-    -- update all clients --
-    TriggerClientEvent("properties:update", -1, PROPERTIES[property_name])
     -- add blip for co owner --
     TriggerClientEvent("properties:setPropertyBlips", id, GetOwnedPropertyCoords(coowner.identifier, true))
     -- notify --
@@ -737,64 +749,16 @@ AddEventHandler("properties:addCoOwner", function(property_name, id)
   end
 end)
 
-RegisterServerEvent("properties:changeOwner")
-AddEventHandler("properties:changeOwner", function(property_name, id)
+RegisterServerEvent("properties:requestChangeOwner")
+AddEventHandler("properties:requestChangeOwner", function(property_name, id)
   local sourceIdent = exports["usa-characters"]:GetCharacter(source).get("_id")
   local oldOwnerIdent = PROPERTIES[property_name].owner.identifier
   if sourceIdent == oldOwnerIdent then
     if source ~= id then
       if GetPlayerName(id) then
-        -- create person --
-        local person = exports["usa-characters"]:GetCharacter(id)
-        if GetNumberOfOwnedProperties(person.get("_id")) < MAX_NUM_OF_PROPERTIES_SINGLE_PERSON then
-          if PROPERTIES[property_name].lastTransfer == nil then
-            PROPERTIES[property_name].lastTransfer = 0
-          end
-          if os.time() - tonumber(PROPERTIES[property_name].lastTransfer) > PROPERTY_TRANSFER_TIMEOUT_HOURS * 3600 then
-            local new_owner = {
-              name = person.getFullName(),
-              purchase_date = PROPERTIES[property_name].owner.purchase_date,
-              identifier = person.get("_id")
-            }
-            local oldOwner = PROPERTIES[property_name].owner.name
-            PROPERTIES[property_name].owner = new_owner
-            PROPERTIES[property_name].lastTransfer = os.time()
-            -- save --
-            SavePropertyData(property_name)
-            -- update all clients --
-            TriggerClientEvent("properties:update", -1, PROPERTIES[property_name])
-            -- add blip for co owner --
-            TriggerClientEvent("properties:setPropertyBlips", id, GetOwnedPropertyCoords(new_owner.identifier, true))
-            TriggerClientEvent("properties:setPropertyBlips", source, GetOwnedPropertyCoords(exports["usa-characters"]:GetCharacter(source).get("_id"), true))
-            -- notify --
-            TriggerClientEvent("usa:notify", source, "The property has been transfered to "..new_owner.name)
-            TriggerClientEvent("usa:notify", id, property_name .. " has been transfered into your ownership!")
-
-            local desc = "**Property Transfer**:\n\n**Property:** " .. property_name .. "\n**Old Owner:** " .. oldOwner .. "\n**New Owner:** ".. new_owner.name
-            local url = GetConvar("property-log-webhook", "")
-            PerformHttpRequest(url, function(err, text, headers)
-              if text then
-                print(text)
-              end
-            end, "POST", json.encode({
-              embeds = {
-                {
-                  description = desc,
-                  color = 524288,
-                  author = {
-                    name = "SAN ANDREAS PROPERTY MGMT"
-                  }
-                }
-              }
-            }), { ["Content-Type"] = 'application/json' })
-          else
-            local timeSinceTrans = (os.time() - PROPERTIES[property_name].lastTransfer)/3600
-            timeSinceTrans = exports["globals"]:round(timeSinceTrans, 1)
-            TriggerClientEvent("usa:notify", source,"This property was transfered " .. timeSinceTrans .. " hours ago, there is a limit of 48 hours between transfers!")
-          end
-        else
-          TriggerClientEvent("usa:notify", source,"This person has too many properties already!")
-        end
+        local ownerChar = exports["usa-characters"]:GetCharacter(source)
+        local ownerName = ownerChar.getName()
+        TriggerClientEvent("properties:confirmNewOwner", id, property_name, id, source, ownerName)
       else
         TriggerClientEvent("usa:notify", source, "Person does not exist!")
       end
@@ -803,6 +767,77 @@ AddEventHandler("properties:changeOwner", function(property_name, id)
     end
   else
     TriggerClientEvent("usa:notify", source, "That is not your house!")
+  end
+end)
+
+RegisterServerEvent("properties:changeOwner")
+AddEventHandler("properties:changeOwner", function(property_name, targetID, ownerID, accepted)
+  if not accepted then
+    TriggerClientEvent("usa:notify", ownerID, "Person did not accept the transfer!")
+  else
+    local sourceIdent = exports["usa-characters"]:GetCharacter(ownerID).get("_id")
+    local oldOwnerIdent = PROPERTIES[property_name].owner.identifier
+    if sourceIdent == oldOwnerIdent then
+      if ownerID ~= targetID then
+        if GetPlayerName(targetID) then
+          -- create person --
+          local person = exports["usa-characters"]:GetCharacter(targetID)
+          if GetNumberOfOwnedProperties(person.get("_id")) < MAX_NUM_OF_PROPERTIES_SINGLE_PERSON then
+            if PROPERTIES[property_name].lastTransfer == nil then
+              PROPERTIES[property_name].lastTransfer = 0
+            end
+            if os.time() - tonumber(PROPERTIES[property_name].lastTransfer) > PROPERTY_TRANSFER_TIMEOUT_HOURS * 3600 then
+              local new_owner = {
+                name = person.getFullName(),
+                purchase_date = PROPERTIES[property_name].owner.purchase_date,
+                identifier = person.get("_id")
+              }
+              local oldOwner = PROPERTIES[property_name].owner.name
+              PROPERTIES[property_name].owner = new_owner
+              PROPERTIES[property_name].lastTransfer = os.time()
+              -- save --
+              SavePropertyData(property_name)
+              -- add blip for co owner --
+              TriggerClientEvent("properties:setPropertyBlips", targetID, GetOwnedPropertyCoords(new_owner.identifier, true))
+              TriggerClientEvent("properties:setPropertyBlips", ownerID, GetOwnedPropertyCoords(exports["usa-characters"]:GetCharacter(ownerID).get("_id"), true))
+              -- notify --
+              TriggerClientEvent("usa:notify", ownerID, "The property has been transfered to "..new_owner.name)
+              TriggerClientEvent("usa:notify", targetID, property_name .. " has been transfered into your ownership!")
+
+              local desc = "**Property Transfer**:\n\n**Property:** " .. property_name .. "\n**Old Owner:** " .. oldOwner .. "\n**New Owner:** ".. new_owner.name
+              local url = GetConvar("property-log-webhook", "")
+              PerformHttpRequest(url, function(err, text, headers)
+                if text then
+                  print(text)
+                end
+              end, "POST", json.encode({
+                embeds = {
+                  {
+                    description = desc,
+                    color = 524288,
+                    author = {
+                      name = "SAN ANDREAS PROPERTY MGMT"
+                    }
+                  }
+                }
+              }), { ["Content-Type"] = 'application/json' })
+            else
+              local timeSinceTrans = (os.time() - PROPERTIES[property_name].lastTransfer)/3600
+              timeSinceTrans = exports["globals"]:round(timeSinceTrans, 1)
+              TriggerClientEvent("usa:notify", ownerID,"This property was transfered " .. timeSinceTrans .. " hours ago, there is a limit of 48 hours between transfers!")
+            end
+          else
+            TriggerClientEvent("usa:notify", ownerID,"This person has too many properties already!")
+          end
+        else
+          TriggerClientEvent("usa:notify", ownerID, "Person does not exist!")
+        end
+      else
+        TriggerClientEvent("usa:notify", ownerID, "You cant transfer a house to yourself!")
+      end
+    else
+      TriggerClientEvent("usa:notify", ownerID, "That is not your house!")
+    end
   end
 end)
 
@@ -828,8 +863,6 @@ AddEventHandler("properties:addLEO", function(property_name, id, source)
         table.insert(PROPERTIES[property_name].coowners, coowner)
         -- save --
         SavePropertyData(property_name)
-        -- update all clients --
-        TriggerClientEvent("properties:update", -1, PROPERTIES[property_name])
         -- add blip for co owner --
         TriggerClientEvent("properties:setPropertyBlips", id, GetOwnedPropertyCoords(coowner.identifier, true))
         -- notify --
@@ -880,8 +913,6 @@ AddEventHandler("properties:removeCoOwner", function(property_name, index)
     table.remove(PROPERTIES[property_name].coowners, index)
     -- save --
     SavePropertyData(property_name)
-    -- update all clients --
-    TriggerClientEvent("properties:update", -1, PROPERTIES[property_name])
     -- notify --
     TriggerClientEvent("usa:notify", source, "Co-owner removed!")
   end
@@ -917,8 +948,6 @@ AddEventHandler("properties:removeLEO", function(property_name, id, source)
           table.remove(PROPERTIES[property_name].coowners, index)
           -- save --
           SavePropertyData(property_name)
-          -- update all clients --
-          TriggerClientEvent("properties:update", -1, PROPERTIES[property_name])
           -- notify --
           TriggerClientEvent("usa:notify", source, "Warrant Revoked!")
           TriggerClientEvent("usa:notify", id, "Your warrant for " .. PROPERTIES[property_name].name .. " was revoked!")
@@ -1039,6 +1068,26 @@ function Evict_Owners()
 end
 -----------------------------------------
 
+RegisterNetEvent("usa-properties-og:server:resetcharproperties")
+AddEventHandler("usa-properties-og:server:resetcharproperties", function(char_identifier)
+  for name, info in pairs(PROPERTIES) do
+    if PROPERTIES[name].owner.identifier == char_identifier then
+      PROPERTIES[name].fee.end_date = 0
+      PROPERTIES[name].fee.due_days = 0
+      PROPERTIES[name].fee.paid_time = 0
+      PROPERTIES[name].fee.paid = 0
+      PROPERTIES[name].owner.name = nil
+      PROPERTIES[name].owner.purchase_date = 0
+      PROPERTIES[name].owner.identifier = "undefined"
+      PROPERTIES[name].coowners = {}
+      if info.type == "house" then
+        PROPERTIES[name].will_leave = false
+      end
+      SavePropertyData(name)
+    end
+  end
+end)
+
 ------------------------
 -- Save Property Data --
 ------------------------
@@ -1057,6 +1106,9 @@ function SavePropertyData(property_name)
         end
       end
     end)
+    for _, playerId in ipairs(GetPlayers()) do
+      TriggerClientEvent("properties:update", playerId, TrimPropertyTableForClient(PROPERTIES[property_name]))
+    end
   end)
 end
 
@@ -1226,7 +1278,6 @@ AddEventHandler("properties:editProperty", function(arg, value, name)
             local doc = exports.essentialmode:getDocument("properties", property_to_edit._id)
             property_to_edit._rev = doc._rev
             PROPERTIES[name] = property_to_edit
-
             exports["usa-characters"]:GetCharacters(function(serverChars)
             local owners = {}
             for k,v in pairs(serverChars) do
@@ -1241,6 +1292,9 @@ AddEventHandler("properties:editProperty", function(arg, value, name)
             end
             for i,v in ipairs(owners) do
               TriggerClientEvent("properties:setPropertyBlips", tonumber(v.id), GetOwnedPropertyCoords(v.ident, true))
+            end
+            for _, playerId in ipairs(GetPlayers()) do
+              TriggerClientEvent("properties:update", playerId, TrimPropertyTableForClient(PROPERTIES[name]))
             end
           end)
         end)
@@ -1305,12 +1359,24 @@ AddEventHandler("properties:addNewProperty", function(pLoc, gLoc, name, price)
           -- update server --
           new_property._id = docID
           PROPERTIES[name] = new_property
+          for _, playerId in ipairs(GetPlayers()) do
+            TriggerClientEvent("properties:update", playerId, TrimPropertyTableForClient(PROPERTIES[name]))
+          end
         end)
       end)
     else
       TriggerClientEvent("usa:notify", usource, "A property with name already exists")
     end
   end
+end)
+
+RegisterServerEvent("properties:loadForClient")
+AddEventHandler("properties:loadForClient", function()
+  local trimmedProperties = {}
+  for name, info in pairs(PROPERTIES) do
+    trimmedProperties[name] = TrimPropertyTableForClient(info)
+  end
+  TriggerClientEvent("properties:setPropertiesForClient", source, trimmedProperties)
 end)
 
 -- To add business properties --
@@ -1370,6 +1436,9 @@ TriggerEvent('es:addGroupCommand', 'addbusinessproperty', 'admin', function(sour
         -- update server --
         new_property._id = docID
         PROPERTIES[name] = new_property
+        for _, playerId in ipairs(GetPlayers()) do
+          TriggerClientEvent("properties:update", playerId, PROPERTIES[name])
+        end
       end)
     end)
   else
@@ -1494,6 +1563,9 @@ AddEventHandler('rconCommand', function(commandName, args)
       local propertyId = PROPERTIES[name]._id
       -- remove from server memory
       PROPERTIES[name] = nil
+      for _, playerId in ipairs(GetPlayers()) do
+        TriggerClientEvent("properties:remove", playerId, name)
+      end
       -- remove from disk
       TriggerEvent('es:exposeDBFunctions', function(db)
         db.deleteDocument("properties", propertyId, function(ok)
@@ -1640,6 +1712,7 @@ function ownsProperty(name, src)
   return false
 end
 
+--[[
 -- send nearby property data to clients every CLIENT_UPDATE_INTERVAL seconds
 Citizen.CreateThread(function()
   local lastUpdateTime = os.time()
@@ -1662,3 +1735,4 @@ Citizen.CreateThread(function()
     Wait(1)
   end
 end)
+--]]
