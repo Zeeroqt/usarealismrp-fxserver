@@ -780,67 +780,116 @@ local distanceToCheck = 5.0
 
 -- Add an event handler for the deleteVehicle event.
 -- Gets called when a user types in /impound in chat (see server.lua)
-AddEventHandler( 'impoundVehicle', function()
-    local ped = PlayerPedId()
+AddEventHandler('impoundVehicle', function(doImmediately)
+  local ped = PlayerPedId()
+  local pos = GetEntityCoords(ped)
+  local nearestVeh = GetClosestVehicle(pos.x, pos.y, pos.z, 3.0, 0, 70)
+  local currentVeh = GetVehiclePedIsIn(ped, false)
 
-    if DoesEntityExist(ped) and not IsEntityDead(ped) then
-        local pos = GetEntityCoords( ped )
+  if currentVeh and DoesEntityExist(currentVeh) then
+      local plate = GetVehicleNumberPlateText(currentVeh)
+      TriggerServerEvent("impound:impoundVehicle", currentVeh, plate)
 
-        if IsPedSittingInAnyVehicle( ped ) then
-            local vehicle = GetVehiclePedIsIn(ped, false)
-            local plate = GetVehicleNumberPlateText(vehicle, false)
-            plate = exports.globals:trim(plate)
+      local success = lib.progressBar({
+          duration = doImmediately and 1000 or 45000,
+          label = 'Impounding vehicle',
+          canCancel = true,
+          anim = {
+              dict = 'missfam4',
+              clip = 'base'
+          },
+          prop = {
+              model = 'prop_fib_clipboard',
+              pos = vec3(0.0, 0.0, 0.0),
+              rot = vec3(0.0, 0.0, 0.0)
+          },
+          disable = {
+              move = true,
+              combat = true
+          },
+      })
 
-            if GetPedInVehicleSeat( vehicle, -1 ) == ped then
-                TriggerServerEvent("impound:impoundVehicle", vehicle, plate)
+      if success then
+          NetworkRequestControlOfEntity(currentVeh)
+          local timeout = 5000 
+          while not NetworkHasControlOfEntity(currentVeh) do
+              Wait(100)
+              timeout = timeout - 100
+              if timeout <= 0 then
+                  exports.globals:notify("Failed to impound the vehicle.", "^3INFO: ^0Timeout exceeded.")
+                  return
+              end
+          end
 
-                NetworkRequestControlOfEntity(vehicle)
-                while not NetworkHasControlOfEntity(vehicle) do
-                    Wait(100)
-                    timeout = timeout - 100
-                end
-                SetEntityAsMissionEntity(vehicle, true, true)
-                while not IsEntityAMissionEntity(vehicle) do
-                    Wait(100)
-                end
-                Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized( vehicle ) ) -- DeleteVehicle Native
-                if (DoesEntityExist(vehicle)) then 
-                    DeleteEntity(vehicle) -- Fallback in case DeleteVehicle does not work, DeleteEntity might
-                end 
-                ShowNotification( "Vehicle impounded." )
-            else
-                ShowNotification( "You must be in the driver's seat!" )
-            end
-        else
-            local playerPos = GetEntityCoords( ped, 1 )
-            local inFrontOfPlayer = GetOffsetFromEntityInWorldCoords( ped, 0.0, distanceToCheck, 0.0 )
-            local vehicle = GetVehicleInDirection( playerPos, inFrontOfPlayer , distanceToCheck, ped)
-            local plate = GetVehicleNumberPlateText(vehicle, false)
-            plate = exports.globals:trim(plate)
+          SetEntityAsMissionEntity(currentVeh, true, true)
+          while not IsEntityAMissionEntity(currentVeh) do
+              Wait(100)
+          end
 
-            if DoesEntityExist( vehicle ) then
-                TriggerServerEvent("impound:impoundVehicle", vehicle, plate)
+          DeleteVehicle(currentVeh)
+          if DoesEntityExist(currentVeh) then
+              DeleteEntity(currentVeh)
+          end
 
-                NetworkRequestControlOfEntity(vehicle)
-                while not NetworkHasControlOfEntity(vehicle) do
-                    Wait(100)
-                    timeout = timeout - 100
-                end
-                SetEntityAsMissionEntity(vehicle, true, true)
-                while not IsEntityAMissionEntity(vehicle) do
-                    Wait(100)
-                end
-                Citizen.InvokeNative( 0xEA386986E786A54F, Citizen.PointerValueIntInitialized( vehicle ) ) -- DeleteVehicle Native
-                if (DoesEntityExist(vehicle)) then 
-                    DeleteEntity(vehicle) -- Fallback in case DeleteVehicle does not work, DeleteEntity might
-                end
-                ShowNotification( "Vehicle impounded." )
-            else
-                ShowNotification( "You must be in or near a vehicle to impound it." )
-            end
-        end
-    end
-end )
+          exports.globals:notify("Vehicle Impounded!", "^3INFO: ^0Vehicle Impounded!")
+          ClearPedTasks(ped)
+      else
+          exports.globals:notify("Impound cancelled.", "^3INFO: ^0Impound cancelled.")
+      end
+  elseif nearestVeh and DoesEntityExist(nearestVeh) then
+      local plate = GetVehicleNumberPlateText(nearestVeh)
+      TriggerServerEvent("impound:impoundVehicle", nearestVeh, plate)
+
+      local success = lib.progressBar({
+          duration = doImmediately and 1000 or 45000,
+          label = 'Impounding nearest vehicle',
+          canCancel = true,
+          anim = {
+              dict = 'missfam4',
+              clip = 'base'
+          },
+          prop = {
+              model = 'prop_fib_clipboard',
+              pos = vec3(0.0, 0.0, 0.0),
+              rot = vec3(0.0, 0.0, 0.0)
+          },
+          disable = {
+              move = true,
+              combat = true
+          },
+      })
+
+      if success then
+          NetworkRequestControlOfEntity(nearestVeh)
+          local timeout = 5000 
+          while not NetworkHasControlOfEntity(nearestVeh) do
+              Wait(100)
+              timeout = timeout - 100
+              if timeout <= 0 then
+                  exports.globals:notify("Failed to impound the nearest vehicle.", "^3INFO: ^0Timeout exceeded.")
+                  return
+              end
+          end
+
+          SetEntityAsMissionEntity(nearestVeh, true, true)
+          while not IsEntityAMissionEntity(nearestVeh) do
+              Wait(100)
+          end
+
+          DeleteVehicle(nearestVeh)
+          if DoesEntityExist(nearestVeh) then
+              DeleteEntity(nearestVeh)
+          end
+
+          exports.globals:notify("Nearest Vehicle Impounded!", "^3INFO: ^0Nearest Vehicle Impounded!")
+          ClearPedTasks(ped)
+      else
+          exports.globals:notify("Impound cancelled.", "^3INFO: ^0Impound cancelled.")
+      end
+  else
+      exports.globals:notify("No nearby vehicle to impound.", "^3INFO: ^0No nearby vehicle.")
+  end
+end)
 
 --------------------------------
 ------ FINGER POINTING ---------

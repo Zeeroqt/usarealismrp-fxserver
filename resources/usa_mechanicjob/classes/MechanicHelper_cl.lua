@@ -273,6 +273,18 @@ MechanicHelper.installUpgrade = function(veh, upgrade, cb)
             flag = 39,
         },
     }) then
+        if upgrade.requiresItem then
+            local hasItem = TriggerServerCallback {
+                eventName = "interaction:hasItem",
+                args = {upgrade.requiresItem}
+            }
+            if not hasItem then
+                exports.globals:notify("Missing required item")
+                TriggerEvent("interaction:setBusy", false)
+                cb(false)
+                return
+            end
+        end
         if MechanicHelper.UPGRADE_FUNC_MAP[upgrade.id] then
             MechanicHelper.UPGRADE_FUNC_MAP[upgrade.id](veh, upgrade.increaseAmount) -- call appropriate native
         end

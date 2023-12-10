@@ -1,6 +1,7 @@
 local inventoriesBeingAccessed = {}
 
 local lastInvMovTimeStamps = {}
+local lastItemGiveTimeStamps = {}
 
 local LAG_SWTICH_THRESHOLD_MS = 300 -- 300 ms per move action would prob be too fast for any human to do naturally
 
@@ -101,7 +102,14 @@ RegisterServerEvent("interaction:giveItemToPlayer")
 AddEventHandler("interaction:giveItemToPlayer", function(item, targetPlayerId)
 	local toChar = exports["usa-characters"]:GetCharacter(targetPlayerId)
 	local fromChar = exports["usa-characters"]:GetCharacter(source)
-	if toChar.canHoldItem(item) then
+	if toChar.canHoldItem(item) and fromChar.hasItem(item) then
+		if lastItemGiveTimeStamps[source] then
+			if GetGameTimer() - lastItemGiveTimeStamps[source] <= LAG_SWTICH_THRESHOLD_MS then
+				print("sus inventory item give detected (lag switch dupe attempt?) from #" .. source .. " / " .. GetPlayerName(source))
+				return
+			end
+		end
+		lastItemGiveTimeStamps[source] = GetGameTimer()
 		if not item.type or item.type == "license" then
 			TriggerClientEvent("usa:notify", targetPlayerId, "Can't trade licenses. Sorry!")
 			return
@@ -377,6 +385,9 @@ end)
 AddEventHandler('playerDropped', function(reason)
 	if lastInvMovTimeStamps[source] then
 		lastInvMovTimeStamps[source] = nil
+	end
+	if lastItemGiveTimeStamps[source] then
+		lastItemGiveTimeStamps[source] = nil
 	end
 end)
 

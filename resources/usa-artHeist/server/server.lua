@@ -174,6 +174,10 @@ AddEventHandler('artHeist:useThermite', function()
     print("toggling door locks")
     -- remove thermite
     local char = exports["usa-characters"]:GetCharacter(source)
+    if not char.hasItem("Thermite") then
+        TriggerClientEvent("usa:notify", source, "Missing thermite item")
+        return
+    end
     char.removeItem("Thermite", 1)
     -- unlock mansion doors
     exports.usa_doormanager:toggleDoorLockByName("Art Mansion Front", false)
