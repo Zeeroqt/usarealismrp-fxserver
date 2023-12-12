@@ -67,7 +67,7 @@ locations = {
 	{x = -2187.1748046875, y = 1135.5759277344, z = -23.259094238281, noBlip = true}, -- LS Car Meet
 	{x =  1013.5130004883, y = -2358.1096191406, z = 30.509565353394, noBlip = true}, -- LS Fight Club
 	{x = -424.23614501953, y = -38.142559051514, z = 46.215244293213, noBlip = true}, -- cocaktoos
-	{x = 550.98217773438, y = -206.7356262207, z = 54.104431152344, noBlip = true}, -- auto exotic repair on elgin ave
+	{x = 573.20947265625, y = -218.34083557129, z = 55.830551147461, noBlip = true}, -- auto exotic repair on elgin ave
 	{x = 2524.6560058594, y = 4109.4716796875, z = 38.584625244141, noBlip = true}, -- lunatix garage
 	{x = 366.37405395508, y = 293.75842285156, z = 103.41968536377, noBlip = false}, -- Parking behing vault
 	{x = 813.39111328125, y = -824.33929443359, z = 26.181001663208, noBlip = true}, -- Otto's Auto Repair
