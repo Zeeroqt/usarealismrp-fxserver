@@ -36,8 +36,24 @@ Config = {
         {x = 2748.35, y = 3472.56, z = 55.67},
         {x = -3152.76, y = 1110.10, z = 20.87}
     },
+    GUN_STORE_LOCATIONS = {
+        { x = -327.72702026367, y = 6080.2001953125, z = 31.454776763916 }, -- Paleto
+	    { x = -3168.2614746094, y = 1085.2199707031, z = 20.838739395142 }, -- Great Ocean Hwy. / Chumash
+	    { x = -1114.3781738281, y = 2696.111328125, z = 18.55428314209 }, -- Route 68
+	    { x = 1696.3111572266, y = 3756.3647460938, z = 34.705326080322 }, -- Sandy Shores / Algonquin
+	    { x = 248.02490234375, y = -49.66752243042, z = 69.941246032715 }, -- Spanish Ave
+	    { x = -1309.8179931641, y = -392.07473754883, z = 36.695777893066 }, -- Boulevard Del Perro
+	    { x = -661.37243652344, y = -939.52880859375, z = 21.829343795776 }, -- Linsday Circus
+	    { x = 15.989282608032, y = -1109.3151855469, z = 29.797222137451 }, -- Adam's / Elgin Ave
+	    { x = 843.20684814453, y = -1029.1872558594, z = 28.194852828979 }, -- Olympic Fwy / Vespucci 
+	    { x = 2566.8959960938, y = 298.49291992188, z = 108.73505401611 }, -- Palomino Fwy
+	    { x = 814.80017089844, y = -2153.0910644531, z = 29.619186401367 }, -- Popular St
+        { x = -542.51873779297, y = -583.68939208984, z = 34.681762695313}, -- New Mall MLO
+        {x = -1305.2866210938, y = -3388.1235351563, z = 13.940147399902} -- paintball arena at LSIA
+    },
     TABS = {
         GENERAL_STORE = { "Food", "Drinks", "Electronics", "Misc" },
-        HARDWARE_STORE = { "Electronics", "Misc" }
+        HARDWARE_STORE = { "Electronics", "Misc" },
+        GUN_STORE = { "Pistols", "Shotguns", "Ammunation", "Magazines", "Extras" }
     }
 }
