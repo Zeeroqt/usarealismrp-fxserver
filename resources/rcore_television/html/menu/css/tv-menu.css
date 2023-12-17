@@ -1,3 +1,29 @@
+#blackscreen{
+    background: black;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 999999;
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.10);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 #offButton{
 	font-size: 32px;
     position: absolute;
@@ -30,6 +56,7 @@
 body {
     background-image: url(./img/bg.jpg);
     background-size: cover;
+    overflow: hidden;
 }
 
 #icon-size{
@@ -95,8 +122,17 @@ body {
 	}
 }
 
+.box.active {
+    z-index: 999 !important;
+    border-radius: 17px;
+    background: #e0eefb;
+    transform: scale(1.25);
+    box-shadow: 1px 7px 63px 0px #000000;
+}
+
 @media screen and (min-width: 768px) {
 	.box{
+	    transition-duration: 500ms;
 		background: aliceblue;
 		max-height: 160px;
 		max-width: 467px;
@@ -105,15 +141,18 @@ body {
 		text-align: center;
 		height: 100%;
 		width: 100%;
+		z-index: 9 !imporant;
 	}
 }
 @media screen and (max-width: 768px) {
 	.box {
+	    transition-duration: 500ms;
 		background: aliceblue;
 		float: left;
 		margin: 8px;
 		text-align: center;
 		width: 100%;
+		z-index: 9 !imporant;
 	}
 	
 	#icon-size{
