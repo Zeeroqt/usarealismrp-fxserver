@@ -111,7 +111,6 @@ local HARDWARE_STORE_ITEMS = {
     { name = "Hammer", type = "weapon", hash = 1317494643, price = 50, legality = "legal", quantity = 1, weight = 10, objectModel = "prop_tool_hammer" },
     { name = "Knife", type = "weapon", hash = -1716189206, price = 200, legality = "legal", quantity = 1, weight = 8, objectModel = "w_me_knife_01" },
     { name = "Bat", type = "weapon", hash = -1786099057, price = 100, legality = "legal", quantity = 1, weight = 20, objectModel = "w_me_bat" },
-    { name = "Crowbar", type = "weapon", hash = -2067956739, price = 150, legality = "legal", quantity = 1, weight = 17, objectModel = "w_me_crowbar" },
     { name = "Hatchet", type = "weapon", hash = -102973651, price = 250, legality = "legal", quantity = 1, weight = 12, objectModel = "w_me_hatchet" },
     { name = "Wrench", type = "weapon", hash = 419712736, price = 400, legality = "legal", quantity = 1, weight = 12, objectModel = "prop_tool_wrench" },
     { name = "Machete", type = "weapon", hash = -581044007, price = 250, legality = "legal", quantity = 1, weight = 15, objectModel = "prop_ld_w_me_machette" },
@@ -120,10 +119,45 @@ local HARDWARE_STORE_ITEMS = {
     { name = "Paint Remover", price = 1000, type = "misc", quantity = 1, legality = "legal", weight = 15, objectModel = "bkr_prop_meth_ammonia", remainingUses = 5, notStackable = true},
     { name = "Rag", price = 200, type = "misc", quantity = 1, legality = "legal", weight = 5, objectModel = "prop_shower_towel"},
     { name = "Sign Kit", price = 200, type = "misc", quantity = 1, legality = "legal", weight = 5, objectModel = "prop_cd_paper_pile1"},
-    { name = "Drill", price = 2000, legality = "legal", quantity = 1, type = "misc", weight = 10, objectModel = "hei_prop_heist_drill" },
     { name = "Beer Pong Kit", price = 300, type = "misc", quantity = 1, legality = "legal", weight = 5, objectModel = "apa_prop_cs_plastic_cup_01"},
     { name = "Basketball Hoop", price = 1500, type = "misc", quantity = 1, legality = "legal", weight = 10, objectModel = "prop_basketball_net2"},
     { name = "Skateboard", price = 1500, type = "misc", quantity = 1, legality = "legal", weight = 10, objectModel = "v_res_skateboard"}
+  }
+}
+
+local GUN_STORE_ITEMS = {
+  ["Pistols"] = {
+    { name = "Pistol", type = "weapon", hash = 453432689, price = 5000, quantity = 1, weight = 15, objectModel = "w_pi_pistol" },
+    { name = "Heavy Pistol", type = "weapon", hash = -771403250, price = 7500, quantity = 1, weight = 20, objectModel = "w_pi_heavypistol" },
+    { name = "50 Caliber", type = "weapon", hash = -1716589765, price = 10000, quantity = 1, weight = 20, objectModel = "w_pi_pistol50" },
+    { name = "SNS Pistol", type = "weapon", hash = -1076751822, price = 4000, quantity = 1, weight = 12, objectModel = "w_pi_sns_pistol" },
+    { name = "Glock", type = "weapon", hash = 1593441988, price = 7000, quantity = 1, weight = 15, objectModel = "w_pi_combatpistol" },
+    { name = "MK2", type = "weapon", hash = -1075685676, price = 6000, quantity = 1, weight = 15 },
+    { name = "Vintage Pistol", type = "weapon", hash = 137902532, price = 5000, quantity = 1, weight = 15, objectModel = "w_pi_vintage_pistol" }
+  },
+  ["Shotguns"] = {
+    { name = "Pump Shotgun", type = "weapon", hash = 487013001, price = 10000, quantity = 1, weight = 25, objectModel = "w_sg_pumpshotgun" },
+    { name = "Bullpup Shotgun", type = "weapon", hash = -1654528753, price = 25000, quantity = 1, weight = 30, objectModel = "w_sg_bullpupshotgun" },
+    { name = "Musket", type = "weapon", hash = -1466123874, price = 15000, quantity = 1, weight = 35, objectModel = "w_ar_musket" }
+  },
+  ["Ammunation"] = {
+    { name = "9mm Bullets", type = "ammo", price = 500, weight = 0.5, quantity = 10, objectModel = "prop_ld_ammo_pack_01" },
+    { name = ".50 Cal Bullets", type = "ammo", price = 700, weight = 0.5, quantity = 10, objectModel = "prop_ld_ammo_pack_01" },
+    { name = ".45 Bullets", type = "ammo", price = 500, weight = 0.5, quantity = 10, objectModel = "prop_ld_ammo_pack_01" },
+    { name = "12 Gauge Shells", type = "ammo", price = 600, weight = 0.5, quantity = 10, objectModel = "prop_ld_ammo_pack_03" },
+    { name = "Musket Ammo", type = "ammo", price = 600, weight = 0.5, quantity = 10, objectModel = "prop_ld_ammo_pack_03" }
+  },
+  ["Magazines"] = {
+    { name = "9mm Mag [7]", type = "magazine", price = 250, weight = 7, receives = "9mm", MAX_CAPACITY = 7, currentCapacity = 0 },
+    { name = "9mm Mag [12]", type = "magazine", price = 250, weight = 7, receives = "9mm", MAX_CAPACITY = 12, currentCapacity = 0 },
+    { name = ".50 Cal Mag [9]", type = "magazine", price = 400, weight = 7, receives = ".50 Cal", MAX_CAPACITY = 9, currentCapacity = 0 },
+    { name = ".45 Mag [6]", type = "magazine", price = 300, weight = 7, receives = ".45", MAX_CAPACITY = 6, currentCapacity = 0 },
+    { name = ".45 Mag [18]", type = "magazine", price = 360, weight = 7, receives = ".45", MAX_CAPACITY = 18, currentCapacity = 0 }
+  },
+  ["Extras"] = {
+    { name = "Police Armor", type = "misc", price = 2800, quantity = 1, weight = 15, objectModel = "prop_bodyarmour_03" },
+    { name = "Body Armor", type = "misc", price = 1300, quantity = 1, weight = 10, objectModel = "prop_bodyarmour_03" },
+    { name = "Fire Extinguisher", type = "weapon",  hash = 101631238, price = 400, weight = 20, objectModel = "prop_fire_hosereel" }
   }
 }
 
@@ -150,7 +184,18 @@ function getNearbyStoreType(src)
       return "hardware"
     end
   end
-  return "general"
+    return "general"
+end
+
+function getNearbyStoreType(src)
+  local pedCoords = GetEntityCoords(GetPlayerPed(src))
+  for i = 1, #Config.GUN_STORE_LOCATIONS do
+    local loc = Config.GUN_STORE_LOCATIONS[i]
+    local dist = #(pedCoords - vector3(loc.x, loc.y, loc.z))
+    if dist < 5 then
+      return "gun"
+    end
+  end
 end
 
 function getItemByTabAndName(storeType, tab, itemName)
@@ -164,6 +209,12 @@ function getItemByTabAndName(storeType, tab, itemName)
     for i = 1, #HARDWARE_STORE_ITEMS[tab] do
       if HARDWARE_STORE_ITEMS[tab][i].name == itemName then
         return HARDWARE_STORE_ITEMS[tab][i]
+      end
+    end
+    elseif storeType == 'gun' then
+      for i = 1, #GUN_STORE_ITEMS[tab] do
+        if GUN_STORE_ITEMS[tab][i].name == itemName then
+          return GUN_STORE_ITEMS[tab][i]
       end
     end
   end
@@ -253,6 +304,12 @@ RegisterServerCallback {
       return {
         items = HARDWARE_STORE_ITEMS[tab],
         tabs = Config.TABS.HARDWARE_STORE
+      }
+    elseif nearbyStoreType == "gun" then
+      tab = (tab or "Pistols")
+      return {
+        items = GUN_STORE_ITEMS[tab],
+        tabs = Config.TABS.GUN_STORE
       }
     end
   end
