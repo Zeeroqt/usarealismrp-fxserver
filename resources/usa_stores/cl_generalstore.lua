@@ -4,6 +4,7 @@
 
 local GENERAL_STORE_LOCATIONS = Config.GENERAL_STORE_LOCATIONS
 local HARDWARE_STORE_LOCATIONS = Config.HARDWARE_STORE_LOCATIONS
+local GUN_STORE_LOCATIONS = Config.GUN_STORE_LOCATIONS
 
 local ShopliftingAreas = {}
 
@@ -46,6 +47,7 @@ local JOB_PEDS = { -- Z coords are Z-1 or the ped will float!
 local BLIPS = {}
 local GENERAL_STORE_ITEMS = {} -- loaded from server
 local HARDWARE_STORE_ITEMS = {}
+local GUN_STORE_ITEMS = {}
 
 local MENU_KEY = 38
 
@@ -99,10 +101,14 @@ end
 for i = 1, #HARDWARE_STORE_LOCATIONS do
     TriggerEvent("usa_map_blips:addMapBlip", {HARDWARE_STORE_LOCATIONS[i].x, HARDWARE_STORE_LOCATIONS[i].y, HARDWARE_STORE_LOCATIONS[i].z}, 473, 4, 0.7, 64, true, 'Hardware Store', 'hardware_stores') --coords, sprite, display, scale, color, shortRange, name, groupName)
 end
+for i = 1, #GUN_STORE_LOCATIONS do
+  TriggerEvent("usa_map_blips:addMapBlip", {GUN_STORE_LOCATIONS[i].x, GUN_STORE_LOCATIONS[i].y, GUN_STORE_LOCATIONS[i].z}, 112, 4, 0.7, 64, true, 'Gun Store', 'gun_stores') --coords, sprite, display, scale, color, shortRange, name, groupName)
+end
 
 local NEARBY_GENERAL_STORE_LOCATIONS = {}
 local NearbyShopliftingAreas = {}
 local NEARBY_HARDWARE_STORE_LOCATIONS = {}
+local NEARBY_GUN_STORE_LOCATIONS = {}
 
 Citizen.CreateThread(function()
   while true do
@@ -135,6 +141,15 @@ Citizen.CreateThread(function()
       end
     end
 
+    for i = 1, #GUN_STORE_LOCATIONS do
+      local dist = Vdist(mycoords.x, mycoords.y, mycoords.z, GUN_STORE_LOCATIONS[i].x, GUN_STORE_LOCATIONS[i].y, GUN_STORE_LOCATIONS[i].z)
+      if dist < 7 then
+        NEARBY_GUN_STORE_LOCATIONS[i] = true
+      else
+        NEARBY_GUN_STORE_LOCATIONS[i] = nil
+      end
+    end
+
     Wait(500)
   end
 end)
@@ -160,6 +175,10 @@ Citizen.CreateThread(function()
       DrawText3D(HARDWARE_STORE_LOCATIONS[index].x, HARDWARE_STORE_LOCATIONS[index].y, HARDWARE_STORE_LOCATIONS[index].z, '[E] - Hardware Store')
     end
 
+    for index, isNearby in pairs(NEARBY_GUN_STORE_LOCATIONS) do
+      DrawText3D(GUN_STORE_LOCATIONS[index].x, GUN_STORE_LOCATIONS[index].y, GUN_STORE_LOCATIONS[index].z, '[E] - Gun Store')
+    end
+
     if IsControlJustPressed(1, MENU_KEY) then
       -- see if close to any stores --
       for i = 1, #GENERAL_STORE_LOCATIONS do
@@ -169,6 +188,11 @@ Citizen.CreateThread(function()
       end
       for i = 1, #HARDWARE_STORE_LOCATIONS do
         if IsNearStore(HARDWARE_STORE_LOCATIONS[i]) then
+          TriggerEvent("stores:openMenu")
+        end
+      end
+      for i = 1, #GUN_STORE_LOCATIONS do
+        if IsNearStore(GUN_STORE_LOCATIONS[i]) then
           TriggerEvent("stores:openMenu")
         end
       end
